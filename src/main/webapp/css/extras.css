@@ -1,0 +1,49 @@
+body {
+    background-image: url("../images/repeat.jpg");
+    background-repeat: repeat;
+    /*opacity: 0.3;*/
+}
+
+.flexbox-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    align-content: space-around;
+}
+
+.item{
+    flex-grow: 1;
+    width: 40px;
+    height: 40px;
+    background-color: red;
+}
+
+
+.row {
+    display: flex;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-panel {
+    flex: 1;
+}
+
+.preloader-background {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

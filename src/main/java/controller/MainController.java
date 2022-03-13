@@ -6,8 +6,7 @@ import model.Student;
 
 import java.io.*;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -20,14 +19,24 @@ public class MainController extends HttpServlet {
         message = "Hello World!";
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String page = (request.getParameter("page") == null) ? "":request.getParameter("page");
-         System.out.println(" -------> page: "+page);
+    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String page = (request.getParameter("page") == null) ? "" : request.getParameter("page");
+        System.out.println(" -------> page: " + page);
+        System.out.println(" -------> doPost: ");
 
-        request.getRequestDispatcher(page).forward(request,response);
+        page = page.equals("") ? "dashboard" : page;
+        if (page.equals("dashboard")) {
 
+        }
+
+        if (page.equals("student")) {
+
+        }
+
+        response.sendRedirect(page + "-controller");
     }
 
     public void destroy() {
+
     }
 }
