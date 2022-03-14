@@ -3,13 +3,14 @@ package DAOImpl;
 
 import DAO.StudentDao;
 import db.DatabaseConnection;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.SQLState;
 import model.Student;
+import org.json.JSONObject;
 
 public class StudentDaoImpl implements StudentDao {
     List<Student> students = new ArrayList();
@@ -25,7 +26,7 @@ public class StudentDaoImpl implements StudentDao {
         Statement st = this.conn.createStatement();
         ResultSet rs = st.executeQuery("SELECT * FROM students");
 
-        while(rs.next()) {
+        while (rs.next()) {
             int studentId = rs.getInt("student_id");
             String classId = rs.getString("class_id");
             String studentName = rs.getString("student_name");
@@ -38,12 +39,12 @@ public class StudentDaoImpl implements StudentDao {
         return this.students;
     }
 
-    public Student getOneStudent(String id) throws SQLException {
+    public Student fetchOneStudent(String id) throws SQLException {
 
         Statement st = this.conn.createStatement();
         ResultSet rs = st.executeQuery("SELECT * FROM students where student_id = " + id);
 
-        while(rs.next()) {
+        while (rs.next()) {
             int studentId = rs.getInt("student_id");
             String classId = rs.getString("class_id");
             String studentName = rs.getString("student_name");
@@ -54,12 +55,45 @@ public class StudentDaoImpl implements StudentDao {
         return this.student;
     }
 
-    public void updateStudent(Student student) {
-        ((Student)this.students.get(student.getStudentId())).setStudentName(student.getStudentName());
-        System.out.println("Student: ID No " + student.getStudentId() + ", updated in the database");
-    }
 
     public void deleteStudent(Student student) {
         this.students.remove(student.getStudentId());
+    }
+
+    @Override
+    public SQLState updateOneStudent(JSONObject jsonObject) {
+
+        SQLState sqlState = new SQLState();
+        System.out.println("-----> updateOneStudent: ");
+        try {
+            // SQL String
+            String update = " update students  set class_id = ?, student_name = ? where student_id = ?";
+            System.out.println("----> Update: " + update);
+            PreparedStatement st = this.conn.prepareStatement(update);
+
+            st.setString(1, jsonObject.getString("classId"));
+            st.setString(2, jsonObject.getString("studentName"));
+            st.setInt(3, jsonObject.getInt("studentId"));
+
+            // Update the database
+            int code = st.executeUpdate();
+            System.out.println("----> code: " + code);
+            // Close the statement
+            st.close();
+
+            if(code>0){
+                sqlState.setCode(0);
+                sqlState.setMessage("Student updated successfully");
+            }else{
+                sqlState.setCode(-1);
+                sqlState.setMessage("Error when trying to update Student.");
+            }
+            return sqlState;
+
+        } catch (SQLException err) {
+            sqlState.setCode(-1);
+            sqlState.setMessage(err.getMessage());
+            return sqlState;
+        }
     }
 }

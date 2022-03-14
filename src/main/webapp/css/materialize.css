@@ -4948,8 +4948,8 @@ small {
 }
 
 #toast-container {
-  display: block;
-  position: fixed;
+  display: inline-block;
+  position: absolute;
   z-index: 10000;
 }
 
@@ -4970,8 +4970,8 @@ small {
 
 @media only screen and (min-width: 993px) {
   #toast-container {
-    top: 10%;
-    right: 7%;
+    top: 50%;
+    right: 50%;
     max-width: 86%;
   }
 }

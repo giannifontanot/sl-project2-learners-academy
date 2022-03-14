@@ -26,6 +26,7 @@
         <%
             List<Student> studentsList = (List<Student>) request.getAttribute("studentsList");
 
+            // Paint the rows of the student table
             for (Student student : studentsList) {
                 out.println("");
                 out.println("<tr><td>");
@@ -34,14 +35,14 @@
                 out.println("</td><td>");
                 out.println(student.getStudentName());
                 out.println("</td><td>");
-                out.println("<a href='javascript:fOpenDelete(\"" + student.getStudentId() + "\")'><i class=\"material-icons\">delete</i></a>");
+                out.println("<a href='javascript:fOpenModal(\"delete\", \"" + student.getStudentId() +
+                        "\")'><i class=\"material-icons\">delete</i></a>");
                 out.println("</td></tr>");
             }
         %>
         </tbody>
     </table>
 </div>
-<a href="https://www.flaticon.com/free-icons/edit" title="edit icons">Edit icons created by Freepik - Flaticon</a>
 
 
 <script>
@@ -50,37 +51,54 @@
 <a id='modalLink' class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
 <!-- Modal Structure -->
 <div id="modal1" class="modal">
-<%--    <div class="preloader-background">--%>
-<%--        <div class="preloader-wrapper big active">--%>
-<%--            <div class="spinner-layer spinner-blue-only">--%>
-<%--                <div class="circle-clipper left">--%>
-<%--                    <div class="circle"></div>--%>
-<%--                </div>--%>
-<%--                <div class="gap-patch">--%>
-<%--                    <div class="circle"></div>--%>
-<%--                </div>--%>
-<%--                <div class="circle-clipper right">--%>
-<%--                    <div class="circle"></div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
+    <div class="preloader-background" id="preloader">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal-content">
         <h4>Student Detail</h4>
         <div id="contenido">
-            <form name="form1">
+            <form id="form1">
                 <span>Student ID: <input type="text" id="studentId" name="studentId" value=""></span><br/>
                 Class ID: <input type="text" id="classId" name="classId" value=""><br/>
                 Name: <input type="text" id="studentName" name="studentName" value=""><br/>
-                <input type="hidden" id="action" name="action" value="">
-                <button>enviar</button>
+                <input type="text" id="action" name="action" value="">
+                <button class="modal-close" type="submit">Enviar</button>
             </form>
         </div>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+        <a href="javascript:fSubmitForm();" class="modal-close waves-effect waves-green btn-flat">Dont click</a>
     </div>
 </div>
+
+<script>
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        const data = new FormData(event.target);
+
+        const oFormEntries = Object.fromEntries(data.entries());
+
+        console.log("----> about to saveOneStudent: " + oFormEntries.toString());
+
+        await saveOneStudent(oFormEntries);
+    }
+
+    const form = document.querySelector('#form1');
+    form.addEventListener('submit', handleSubmit);
+</script>
 
 
 <!--  Scripts-->
@@ -91,28 +109,18 @@
         var options = {opacity: 0.5}//, onOpenStart: fOpenEdit};
         var instances = M.Modal.init(elems, options);
         var instance = M.Modal.getInstance(elems);
-        //instance.open();
-        //
-
 
     });
 
 
-    async function fOpenEdit(id) {
-        console.log(" -------> fOpenEdit: " + id);
+    async function fOpenEdit(pId) {
+
+        // Set the action
+        document.getElementById("action").value = "updateOneStudent";
+
         // Trigger the Modal to open
         document.getElementById('modalLink').click();
-        //Fill the data
-        await fetchOneStudent(id);
-
-
-    }
-
-     function fetchOneStudent(id) {
-
-        //First we build the JSON from the form
-         const data = new FormData();
-
+        document.getElementById("preloader").style.display = "flex";
 
         fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
             headers: {
@@ -120,23 +128,58 @@
                 'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({studentId: id})
-        })
-            .then(res => res.text()).then((jsonString) => {
+            body: JSON.stringify({action: "fetchOneStudent", studentId: pId})
+
+        }).then(res => res.text()).then(async (jsonString) => {
             console.log(" -------> fetch: " + jsonString);
             try {
 
+                //Painting the values
                 const jsonObject = JSON.parse(jsonString);
                 document.querySelector("#studentId").value = jsonObject.studentId;
                 document.querySelector("#classId").value = jsonObject.classId;
                 document.querySelector("#studentName").value = jsonObject.studentName;
+                await delay(1000);
+                document.getElementById("preloader").style.display = "none";
+
 
             } catch (e) {
                 // On Error
-                console.log("fetchStudents/querySelector" + e);
+                console.log("ERROR: fetchOneStudent/querySelector" + e);
             }
 
         });
+    }
+
+    //ACTION: updateOneStudent or saveNewStudent
+    function saveOneStudent(oFormEntries) {
+        console.log(" -----> saveOneStudent:" + "");
+        console.log(" -----> action: " + document.getElementById('action').value);
+        try {
+            fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                body: JSON.stringify(oFormEntries)
+            })
+                .then(res => res.text()).then((jsonReturnString) => {
+                console.log(" -------> studentjsp fetch: " + jsonReturnString);
+                try {
+
+                    //Answer received from the servlet
+                    const jsonObject = JSON.parse(jsonReturnString);
+                    M.toast({html: jsonObject.code + " " + jsonObject.message})
+                } catch (e) {
+                    // On Error
+                    console.log("ERROR: fetchStudents/querySelector" + e);
+                }
+
+            });
+        } catch (e) {
+            console.log(e);
+        }
     }
 </script>
 
@@ -148,7 +191,8 @@
 </script>
 
 
-<button onclick="javascript:\" fSpinner();\"">fSpinner();</button>
+<button onclick="javascript:\" fSpinner();\
+"">fSpinner();</button>
 
 <script>
     function fSpinner() {
@@ -159,6 +203,11 @@
 
     }
 </script>
+
+<script>
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+</script>
+
 </body>
 </html>
 

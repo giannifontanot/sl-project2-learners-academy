@@ -3,6 +3,7 @@ package controller;
 import DAO.StudentDao;
 import DAOImpl.StudentDaoImpl;
 import com.google.gson.Gson;
+import model.SQLState;
 import model.Student;
 
 import javax.servlet.ServletException;
@@ -58,26 +59,66 @@ public class StudentController extends HttpServlet {
             ex.printStackTrace();
         }
 
-        Student oneStudent = null;
 
         try {
-        // To read what the POST brings to the Servlet
-        String jsonPOST = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JSONObject obj = new JSONObject(jsonPOST);
-        String studentId = (String) obj.get("studentId");
-        //Query the DB
-        oneStudent = studentDao.getOneStudent(studentId);
+            // To read what the POST brings to the Servlet
+            String jsonStringPOST = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            JSONObject jsonObject = new JSONObject(jsonStringPOST);
+            String action = (String) jsonObject.get("action");
+
+            //ACTION?
+            if (action.equals("fetchOneStudent")) {
+
+                String studentId = (String) jsonObject.get("studentId");
+                //Query the DB
+                Student oneStudent = studentDao.fetchOneStudent(studentId);
+
+
+                //Serialize the oneStudent object
+                String studentJsonString = new Gson().toJson(oneStudent);
+                // Returns call originated in the client
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json");
+                out.println(studentJsonString);
+                out.flush();
+            }
+
+            // ACTION ? updateOneStudent or saveNewStudent
+            if (action.equals("updateOneStudent")) {
+
+                //Query the DB
+                assert studentDao != null;
+                SQLState sqlState = studentDao.updateOneStudent(jsonObject);
+
+                // Returns call originated in the client
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json");
+                out.println(new Gson().toJson(sqlState));
+                out.flush();
+            }
+
+            // ACTION ? saveNewStudent
+            if (action.equals("saveNewStudent")) {
+
+                String studentId = (String) jsonObject.get("studentId");
+                String classId = (String) jsonObject.get("classId");
+                String studentName = (String) jsonObject.get("studentName");
+                //Query the DB
+                //Student oneStudent = studentDao.saveNewStudent(studentId, classId, studentName);
+                Student oneStudent = null;
+
+                //Serialize the oneStudent object
+                String studentJsonString = new Gson().toJson(oneStudent);
+                // Returns call originated in the client
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json");
+                out.println(studentJsonString);
+                out.flush();
+            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-        //Serialize the oneStudent object
-        String studentJsonString = new Gson().toJson(oneStudent);
-        // Returns call originated in the client
-        PrintWriter out = response.getWriter();
-        response.setContentType("application/json");
-        out.println(studentJsonString);
-
     }
 
     public void destroy() {
