@@ -3,6 +3,7 @@ package controller;
 import DAO.StudentDao;
 import DAOImpl.StudentDaoImpl;
 import com.google.gson.Gson;
+import model.Clase;
 import model.SQLState;
 import model.Student;
 
@@ -41,11 +42,19 @@ public class StudentController extends HttpServlet {
 
         try {
             studentsList = studentDao.getAllStudents();
-            System.out.println(" -------> studentsList DAO: " + studentsList);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
+        List<Clase> classesList = null;
+
+        try {
+            classesList = studentDao.getAllClasses();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        request.setAttribute("classesList", classesList);
         request.setAttribute("studentsList", studentsList);
         request.getRequestDispatcher("students.jsp").forward(request, response);
     }
@@ -69,10 +78,9 @@ public class StudentController extends HttpServlet {
             //ACTION?
             if (action.equals("fetchOneStudent")) {
 
-                String studentId = (String) jsonObject.get("studentId");
                 //Query the DB
+                String studentId = (String) jsonObject.get("studentId");
                 Student oneStudent = studentDao.fetchOneStudent(studentId);
-
 
                 //Serialize the oneStudent object
                 String studentJsonString = new Gson().toJson(oneStudent);

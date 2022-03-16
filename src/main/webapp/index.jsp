@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@include file="includes/header.jsp"%>
@@ -8,7 +10,7 @@
 <div class="container">
 
     <div class="row">
-        <div class="col s12 m6 push-m3">
+        <div class="col s12 m6">
             <h5 class="center">Welcome to Computer College</h5>
 
             <p class="light">In order to use the roster and update information you need to login first.</p>

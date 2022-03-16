@@ -47,3 +47,8 @@ body {
     right: 0;
     bottom: 0;
 }
+
+.dashboard-cell{
+    padding: 0px 50px 0px 50px;
+    margin: 20px 0px 20px 0px;
+}

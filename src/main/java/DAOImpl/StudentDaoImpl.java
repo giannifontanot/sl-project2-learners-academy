@@ -8,12 +8,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Clase;
 import model.SQLState;
 import model.Student;
 import org.json.JSONObject;
 
 public class StudentDaoImpl implements StudentDao {
     List<Student> students = new ArrayList();
+    List<Clase> classes = new ArrayList();
     Student student = null;
     Connection conn;
 
@@ -24,11 +26,13 @@ public class StudentDaoImpl implements StudentDao {
 
     public List<Student> getAllStudents() throws SQLException {
         Statement st = this.conn.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM students");
+        ResultSet rs = st.executeQuery("select students.student_id, students.student_name, classes.class_name\n" +
+                "from classes, students\n" +
+                "where classes.class_id=students.class_id");
 
         while (rs.next()) {
             int studentId = rs.getInt("student_id");
-            String classId = rs.getString("class_id");
+            String classId = rs.getString("class_name");
             String studentName = rs.getString("student_name");
             Student student = new Student(studentId, classId, studentName);
             this.students.add(student);
@@ -37,6 +41,22 @@ public class StudentDaoImpl implements StudentDao {
 
         st.close();
         return this.students;
+    }
+
+    public List<Clase> getAllClasses() throws SQLException {
+        Statement st = this.conn.createStatement();
+        ResultSet rs = st.executeQuery("select classes.class_id, classes.class_name from classes");
+
+        while (rs.next()) {
+            String classId = rs.getString("class_id");
+            String className = rs.getString("class_name");
+            Clase clase = new Clase(classId, className);
+            this.classes.add(clase);
+            System.out.format(" ----> %s, %s\n", classId, className);
+        }
+
+        st.close();
+        return this.classes;
     }
 
     public Student fetchOneStudent(String id) throws SQLException {

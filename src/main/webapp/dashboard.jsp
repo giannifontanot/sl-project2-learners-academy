@@ -1,4 +1,5 @@
-
+<!DOCTYPE html>
+<html lang="en">
 
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.HashMap" %>
@@ -11,43 +12,45 @@
 
 <body>
 <%@include file="includes/topNav.jsp"%>
+<div class="container">
 <h3>Dashboard</h3>
-
-<table width="70%">
+<table>
     <tr>
-        <td><div class="card-panel secondary-text-color">
-        <a class="" href='./student-controller'>Student list</a>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+        <a class=""
+           href='./student-controller'><h5><i class="material-icons" style="color:#4CAF50">group</i> Student list</h5></a>
         </div></td>
-        <td><div class="card-panel secondary-text-color">
-            <a href='./teacher-controller'>Teacher list</a>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./teacher-controller'><h5><i class="material-icons" style="color:#536DFE">record_voice_over</i> Teacher list</h5></a>
         </div></td>
     </tr>
     <tr>
-        <td><div class="card-panel secondary-text-color">
-            <a href='./subject-controller'>Subject list</a>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./subject-controller'><h5><i class="material-icons" style="color:#FF5722">reorder</i> Subject list</h5></a>
         </div></td>
-        <td><div class="card-panel secondary-text-color">
-            <a href='./class-controller'>Class list</a>
-        </div></td>
-    </tr>
-    <tr>
-        <td><div class="card-panel secondary-text-color">
-            <a href='./-controller'>Student Report</a>
-        </div></td>
-        <td><div class="card-panel secondary-text-color">
-            <a href='./-controller'>Class Report</a>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./class-controller'><h5><i class="material-icons" style="color:#E040FB">picture_in_picture_alt</i> Class list</h5></a>
         </div></td>
     </tr>
     <tr>
-        <td><div class="card-panel secondary-text-color">
-            <a href='./-controller'>Assign Subjects to Class</a>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./-controller'><h5><i class="material-icons" style="color:#FFC107">poll</i> Student Report</h5></a>
         </div></td>
-        <td><div class="card-panel secondary-text-color">
-            <a href='./-controller'>Assign Teachers to Subject</a>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./-controller'><h5><i class="material-icons" style="color:#AFB42B">storage</i> Class Report</h5></a>
+        </div></td>
+    </tr>
+    <tr>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./-controller'><h5><i class="material-icons" style="color:#536DFE">swap_horiz</i> Assign Subjects to Class</h5></a>
+        </div></td>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./-controller'><h5><i class="material-icons" style="color:#E91E63">system_update_alt</i> Assign Teachers to
+                Subject</h5></a>
         </div></td>
     </tr>
 </table>
-
+</div>
 <!--  Scripts-->
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
