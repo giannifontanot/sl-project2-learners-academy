@@ -10,22 +10,7 @@
 
 
 <body>
-<script>
-    //Configuration of Modals
-    document.addEventListener('DOMContentLoaded', function () {
-        //Modal
-        var elems = document.querySelectorAll('.modal');
-        var options = {opacity: 0.5}//, onOpenStart: fOpenEdit};
-        var instances = M.Modal.init(elems, options);
-        var instance = M.Modal.getInstance(elems);
 
-        //Select
-        var elems = document.querySelectorAll('.select');
-        var options = {classes: ""}
-        var instances = M.FormSelect.init(elems, options);
-
-    });
-</script>
 <%@include file="includes/topNav.jsp" %>
 
 
@@ -59,13 +44,15 @@
                 out.println("</td><td class=\"center-align\">");
                 out.println(student.getClassId());
                 out.println("</td><td class=\"center-align\">");
-                out.println("<a href='javascript:fOpenModal(\"delete\", \"" + student.getStudentId() +
+                out.println("<a href='javascript:fOpenDelete(\"" + student.getStudentId() +
                         "\")'><i class=\"material-icons\">delete</i></a>");
                 out.println("</td></tr>");
             }
         %>
         </tbody>
     </table>
+    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();">
+        <i class="material-icons">add</i></a>
 </div>
 
 <a id='modalLink' class="waves-effect waves-light btn hide modal-trigger" href="#modal1">Modal</a>
@@ -91,10 +78,10 @@
         <div id="contenido">
             <form id="form1">
                 <span>Student ID: <input type="text" id="studentId" name="studentId" value=""></span><br/>
-                <span>Class Name:
                 <div class="input-field col s12">
-                    <select id="selectClass" name="selectClass" value="" class="select">
-                        <option value="" disabled selected>Choose your option</option>
+                    <select id="classId" name="classId" class="select">
+                        <option value="" disabled selected>Select the student's class</option>
+
     <%
         List<Clase> classesList = (List<Clase>) request.getAttribute("classesList");
 
@@ -106,11 +93,11 @@
         }
     %>
                     </select>
-                    <label>Materialize Select</label>
+                    <label>Student's class</label>
                 </div>
-                </span><br/>
-                Name: <input type="text" id="studentName" name="studentName" value=""><br/>
+                Student Name: <input type="text" id="studentName" name="studentName" value=""><br/>
                 <input type="text" id="action" name="action" value="">
+                <input type="text" id="deleteStudentId" name="deleteStudentId" value="">
                 <button class="modal-close" type="submit">Enviar</button>
             </form>
         </div>
@@ -125,11 +112,8 @@
         event.preventDefault();
 
         const data = new FormData(event.target);
-
         const oFormEntries = Object.fromEntries(data.entries());
-
         console.log("----> about to saveOneStudent: " + oFormEntries.toString());
-
         await saveOneStudent(oFormEntries);
     }
 
@@ -147,7 +131,7 @@
 
         // Trigger the Modal to open
         document.getElementById('modalLink').click();
-        document.getElementById("preloader").style.display = "flex";
+        document.getElementById("preloader").style.display = "flex"; // this centers the spinner in the modal window
 
         fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
             headers: {
@@ -163,12 +147,26 @@
 
                 //Painting the values
                 const jsonObject = JSON.parse(jsonString);
+                console.log("---> jsonString: " + jsonString);
                 document.querySelector("#studentId").value = jsonObject.studentId;
-                document.querySelector("#classId").value = jsonObject.classId;
                 document.querySelector("#studentName").value = jsonObject.studentName;
+                // Display the modal, hide the spinner
+                //document.querySelector("#classId").value = jsonObject.classId;
+                const classEl = document.getElementById("classId");
+
+                for(var i=0; i<classEl.options.length; i++){
+                    if(classEl.options[i].value == jsonObject.classId){
+                        console.log(classEl.options[i].value + " - " + jsonObject.classId);
+                        classEl.options.selectedIndex = i;
+                    }
+                }
+                //Re-initialize the select controls
+                M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
+
+
+
                 await delay(1000);
                 document.getElementById("preloader").style.display = "none";
-
 
             } catch (e) {
                 // On Error
@@ -176,6 +174,74 @@
             }
 
         });
+    }
+
+    async function fOpenDelete(pId) {
+
+        // Set the action
+        document.getElementById("action").value = "deleteOneStudent";
+
+        // Trigger the Modal to open
+        document.getElementById('modalLink').click();
+        document.getElementById("preloader").style.display = "flex"; // this centers the spinner in the modal window
+
+        fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({action: "fetchOneStudent", studentId: pId})
+
+        }).then(res => res.text()).then(async (jsonString) => {
+            console.log(" -------> fetch: " + jsonString);
+            try {
+
+                //Painting the values AND disabling the controls
+                const jsonObject = JSON.parse(jsonString);
+                console.log("---> jsonString: " + jsonString);
+                document.querySelector("#studentId").value = jsonObject.studentId;
+                document.querySelector("#studentName").value = jsonObject.studentName;
+                // Display the modal, hide the spinner
+                //document.querySelector("#classId").value = jsonObject.classId;
+                const classEl = document.getElementById("classId");
+
+                for(var i=0; i<classEl.options.length; i++){
+                    if(classEl.options[i].value == jsonObject.classId){
+                        console.log(classEl.options[i].value + " - " + jsonObject.classId);
+                        classEl.options.selectedIndex = i;
+                    }
+                }
+                //Re-initialize the select controls
+                classEl.disabled = true;
+                M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
+
+                // Disabling the controls
+                document.querySelector("#studentId").disabled  = true;
+                document.querySelector("#studentName").disabled  = true;
+
+                //Setting the Id to delete
+                document.querySelector("#deleteStudentId").value = jsonObject.studentId;
+                await delay(1000);
+                document.getElementById("preloader").style.display = "none";
+
+            } catch (e) {
+                // On Error
+                console.log("ERROR: fetchOneStudent/querySelector - " + e);
+            }
+
+        });
+    }
+
+    async function fOpenNew() {
+
+        // Set the action
+        document.getElementById("action").value = "saveNewStudent";
+
+        // Trigger the Modal to open
+        document.getElementById('modalLink').click();
+        document.getElementById("preloader").style.display = "none";
+
     }
 
     //ACTION: updateOneStudent or saveNewStudent
@@ -213,9 +279,62 @@
             console.log(e);
         }
     }
+
+    //ACTION: updateOneStudent or saveNewStudent
+    function deleteOneStudent(oFormEntries) {
+        console.log(" -----> deleteOneStudent:" + "");
+        console.log(" -----> action: " + document.getElementById('action').value);
+        try {
+            fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                body: JSON.stringify(oFormEntries)
+            })
+                .then(res => res.text()).then((jsonReturnString) => {
+                console.log(" -------> studentjsp fetch: " + jsonReturnString);
+                try {
+
+                    //Answer received from the servlet
+                    const jsonObject = JSON.parse(jsonReturnString);
+                    M.toast({
+                        html:
+                            jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Student NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
+                                " - " +
+                                jsonObject.message + "</td></tr></table>"
+                    })
+                } catch (e) {
+                    // On Error
+                    console.log("ERROR: fetchStudents/querySelector" + e);
+                }
+
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
 </script>
 
+<script>
+    //Configuration of Modals
+    document.addEventListener('DOMContentLoaded', function () {
+        //Modal
+        var elems = document.querySelectorAll('.modal');
+        var options = {opacity: 0.5}//, onOpenStart: fOpenEdit};
+        var instances = M.Modal.init(elems, options);
+        var instance = M.Modal.getInstance(elems);
+
+        //Select
+        var elems = document.querySelectorAll('.select');
+        var options = {classes: ""}
+        var instances = M.FormSelect.init(elems, options);
+
+    });
+</script>
+
+<%@include file="includes/footer.jsp" %>
 </body>
 </html>
 
-<%@include file="includes/footer.jsp" %>

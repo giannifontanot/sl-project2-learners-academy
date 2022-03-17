@@ -59,25 +59,59 @@ public class StudentDaoImpl implements StudentDao {
         return this.classes;
     }
 
-    public Student fetchOneStudent(String id) throws SQLException {
+    public Student fetchOneStudent(String id)  {
+        try {
+            Statement st = this.conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM students where student_id = " + id);
+            System.out.println("---> SELECT * FROM students where student_id = " + id);
+            while (rs.next()) {
+                int studentId = rs.getInt("student_id");
+                String classId = rs.getString("class_id");
+                String studentName = rs.getString("student_name");
+                student = new Student(studentId, classId, studentName);
+            }
 
-        Statement st = this.conn.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM students where student_id = " + id);
-
-        while (rs.next()) {
-            int studentId = rs.getInt("student_id");
-            String classId = rs.getString("class_id");
-            String studentName = rs.getString("student_name");
-            student = new Student(studentId, classId, studentName);
+            st.close();
+        } catch (SQLException e) {
+            System.out.println("StudentDaoImp > fetchOneStudent > " + e.getSQLState() + " - " + e.getMessage());
         }
-
-        st.close();
         return this.student;
     }
 
 
-    public void deleteStudent(Student student) {
-        this.students.remove(student.getStudentId());
+    @Override
+    public SQLState deleteOneStudent(JSONObject jsonObject) {
+
+        SQLState sqlState = new SQLState();
+        System.out.println("-----> deleteOneStudent: ");
+        try {
+            // SQL String
+            String update = " delete from  students  where student_id = ?";
+            System.out.println("----> Update: " + update);
+
+            PreparedStatement st = this.conn.prepareStatement(update);
+            st.setInt(1, jsonObject.getInt("deleteStudentId"));
+
+            // Update the database
+            int code = st.executeUpdate();
+            System.out.println("----> code: " + code);
+            // Close the statement
+            st.close();
+
+            if (code > 0) {
+                sqlState.setCode(0);
+                sqlState.setMessage("Student deleted successfully");
+            } else {
+                sqlState.setCode(-1);
+                sqlState.setMessage("Error when trying to delete Student.");
+            }
+            return sqlState;
+
+        } catch (SQLException err) {
+            sqlState.setCode(-1);
+            sqlState.setMessage(err.getMessage());
+            return sqlState;
+        }
     }
 
     @Override
@@ -101,10 +135,10 @@ public class StudentDaoImpl implements StudentDao {
             // Close the statement
             st.close();
 
-            if(code>0){
+            if (code > 0) {
                 sqlState.setCode(0);
                 sqlState.setMessage("Student updated successfully");
-            }else{
+            } else {
                 sqlState.setCode(-1);
                 sqlState.setMessage("Error when trying to update Student.");
             }

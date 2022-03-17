@@ -75,7 +75,7 @@ public class StudentController extends HttpServlet {
             JSONObject jsonObject = new JSONObject(jsonStringPOST);
             String action = (String) jsonObject.get("action");
 
-            //ACTION?
+            // ACTION ? fetchOneStudent
             if (action.equals("fetchOneStudent")) {
 
                 //Query the DB
@@ -87,6 +87,7 @@ public class StudentController extends HttpServlet {
                 // Returns call originated in the client
                 PrintWriter out = response.getWriter();
                 response.setContentType("application/json");
+                System.out.println("studentJsonString" + studentJsonString);
                 out.println(studentJsonString);
                 out.flush();
             }
@@ -105,6 +106,20 @@ public class StudentController extends HttpServlet {
                 out.flush();
             }
 
+            // ACTION ? deleteOneStudent
+            if (action.equals("deleteOneStudent")) {
+
+                //Query the DB
+                assert studentDao != null;
+                SQLState sqlState = studentDao.deleteOneStudent(jsonObject);
+
+                // Returns call originated in the client
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json");
+                out.println(new Gson().toJson(sqlState));
+                out.flush();
+            }
+
             // ACTION ? saveNewStudent
             if (action.equals("saveNewStudent")) {
 
@@ -112,7 +127,7 @@ public class StudentController extends HttpServlet {
                 String classId = (String) jsonObject.get("classId");
                 String studentName = (String) jsonObject.get("studentName");
                 //Query the DB
-                //Student oneStudent = studentDao.saveNewStudent(studentId, classId, studentName);
+                SQLState sqlState = studentDao.saveNewStudent(jsonObject);
                 Student oneStudent = null;
 
                 //Serialize the oneStudent object

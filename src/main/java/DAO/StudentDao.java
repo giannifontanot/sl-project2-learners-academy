@@ -12,8 +12,8 @@ public interface StudentDao {
     public List<Student> getAllStudents() throws SQLException;
     public List<Clase> getAllClasses() throws SQLException;
     public Student fetchOneStudent(String id) throws SQLException;
-    public void deleteStudent(Student student) throws SQLException;
     public SQLState updateOneStudent(JSONObject jsonObject)throws SQLException;
+    public SQLState deleteOneStudent(JSONObject jsonObject)throws SQLException;
 }
 
 
