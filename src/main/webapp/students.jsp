@@ -13,10 +13,11 @@
 
 <%@include file="includes/topNav.jsp" %>
 
-
+<br /><br />
 <div class="container">
     <h3>Students</h3>
-    <table class="striped card-panel highlight">
+    <br />
+    <table class="striped card-panel highlight" id="myTable">
         <thead>
         <tr>
             <th class="center-align">Edit</th>
@@ -51,6 +52,11 @@
         %>
         </tbody>
     </table>
+    <div class="col-md-12 center text-center">
+        <span class="left" id="total_reg"></span>
+        <ul class="pagination pager" id="myPager"></ul>
+    </div>
+
     <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();">
         <i class="material-icons">add</i></a>
 </div>
@@ -58,6 +64,7 @@
 <a id='modalLink' class="waves-effect waves-light btn hide modal-trigger" href="#modal1">Modal</a>
 <!-- Modal Structure -->
 <div id="modal1" class="modal">
+    <form id="form1" class="col s12">
     <div class="preloader-background" id="preloader">
         <div class="preloader-wrapper big active">
             <div class="spinner-layer spinner-blue-only">
@@ -76,11 +83,16 @@
     <div class="modal-content">
         <h4>Student Detail</h4>
         <div id="contenido">
-            <form id="form1">
-                <span>Student ID: <input type="text" id="studentId" name="studentId" value=""></span><br/>
-                <div class="input-field col s12">
-                    <select id="classId" name="classId" class="select">
-                        <option value="" disabled selected>Select the student's class</option>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input type="text" id="studentId" name="studentId" value="">
+                        <label for="studentId" class="active">Student</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select id="classId" name="classId" class="select">
+                            <option value="" disabled selected>Select the student's class</option>
 
     <%
         List<Clase> classesList = (List<Clase>) request.getAttribute("classesList");
@@ -92,19 +104,26 @@
             out.println("</option>");
         }
     %>
-                    </select>
-                    <label>Student's class</label>
+                        </select>
+                        <label for="clasId" class="active">Student's class</label>
+                    </div>
                 </div>
-                Student Name: <input type="text" id="studentName" name="studentName" value=""><br/>
-                <input type="text" id="action" name="action" value="">
-                <input type="text" id="deleteStudentId" name="deleteStudentId" value="">
-                <button class="modal-close" type="submit">Enviar</button>
-            </form>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input type="text" id="studentName" name="studentName" value="">
+                        <label for="studentName" class="active">Student Name</label>
+                </div>
+            </div>
+                <input type="hidden" id="action" name="action" value="">
+                <input type="hidden" id="deleteStudentId" name="deleteStudentId" value="">
+
         </div>
     </div>
     <div class="modal-footer">
-        <a href="javascript:fSubmitForm();" class="modal-close waves-effect waves-green btn-flat">Dont click</a>
+        <button class="modal-close waves-effect waves-light btn accent-color" type="submit"><i class="material-icons left">save
+        </i>Save Changes</button>
     </div>
+    </form>
 </div>
 
 <script>
@@ -162,6 +181,7 @@
                 }
                 //Re-initialize the select controls
                 M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
+                M.updateTextFields();
 
 
 
@@ -215,6 +235,7 @@
                 //Re-initialize the select controls
                 classEl.disabled = true;
                 M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
+                M.updateTextFields();
 
                 // Disabling the controls
                 document.querySelector("#studentId").disabled  = true;
@@ -237,6 +258,14 @@
 
         // Set the action
         document.getElementById("action").value = "saveNewStudent";
+
+        //Clean and enabling the controls
+        document.querySelector("#studentId").disabled  = false;
+        document.querySelector("#studentName").disabled  = false;
+        document.getElementById("classId").disabled = false;
+
+        M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
+        M.updateTextFields();
 
         // Trigger the Modal to open
         document.getElementById('modalLink').click();
@@ -268,6 +297,7 @@
                             jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Student NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
                                 " - " +
                                 jsonObject.message + "</td></tr></table>"
+                        , completeCallback: function(){location.reload()}
                     })
                 } catch (e) {
                     // On Error
@@ -304,6 +334,7 @@
                             jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Student NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
                                 " - " +
                                 jsonObject.message + "</td></tr></table>"
+                        , completeCallback: function(){location.reload()}
                     })
                 } catch (e) {
                     // On Error

@@ -59,7 +59,7 @@ public class StudentDaoImpl implements StudentDao {
         return this.classes;
     }
 
-    public Student fetchOneStudent(String id)  {
+    public Student fetchOneStudent(String id) {
         try {
             Statement st = this.conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM students where student_id = " + id);
@@ -145,6 +145,47 @@ public class StudentDaoImpl implements StudentDao {
             return sqlState;
 
         } catch (SQLException err) {
+            sqlState.setCode(-1);
+            sqlState.setMessage(err.getMessage());
+            return sqlState;
+        }
+    }
+
+    @Override
+    public SQLState saveNewStudent(JSONObject jsonObject) {
+
+        SQLState sqlState = new SQLState();
+        System.out.println("-----> updateOneStudent: ");
+        try {
+            // SQL String
+            String insert = " insert into students (student_id, class_id, student_name) values (?, ?, ?) ";
+            System.out.println("----> Update: " + insert);
+            PreparedStatement st = this.conn.prepareStatement(insert);
+
+            st.setInt(1, jsonObject.getInt("studentId"));
+            st.setString(2, jsonObject.getString("classId"));
+            st.setString(3, jsonObject.getString("studentName"));
+
+            // Update the database
+            int code = st.executeUpdate();
+            System.out.println("----> code: " + code);
+            // Close the statement
+            st.close();
+
+            if (code > 0) {
+                sqlState.setCode(0);
+                sqlState.setMessage("Student created successfully");
+            } else {
+                sqlState.setCode(-1);
+                sqlState.setMessage("Error when trying to create new Student.");
+            }
+            return sqlState;
+
+        } catch (SQLException err) {
+            sqlState.setCode(-1);
+            sqlState.setMessage(err.getMessage());
+            return sqlState;
+        } catch (Exception err) {
             sqlState.setCode(-1);
             sqlState.setMessage(err.getMessage());
             return sqlState;

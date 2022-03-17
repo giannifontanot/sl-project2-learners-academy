@@ -1,4 +1,5 @@
 <script src="js/materialize.js"></script>
+<script src="js/pagination.js"></script>
 <script type="text/javascript">
     function createRequestObject()
     {
@@ -56,3 +57,18 @@
 <script>
     const delay = ms => new Promise(res => setTimeout(res, ms));
 </script>
+
+<script>
+    $(document).ready(function(){
+        $('#myTable').pageMe({
+            pagerSelector:'#myPager',
+            activeColor: 'blue',
+            prevText:'Previous',
+            nextText:'Next',
+            showPrevNext:true,
+            hidePageNumbers:false,
+            perPage:10
+        });
+    });
+</script>
+

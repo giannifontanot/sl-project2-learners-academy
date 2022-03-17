@@ -27,7 +27,7 @@ public class StudentController extends HttpServlet {
     private String message;
 
     public void init() {
-        message = "Hello World!";
+        message = "";
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -73,7 +73,9 @@ public class StudentController extends HttpServlet {
             // To read what the POST brings to the Servlet
             String jsonStringPOST = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             JSONObject jsonObject = new JSONObject(jsonStringPOST);
+            System.out.println("jsonObject: " + jsonObject);
             String action = (String) jsonObject.get("action");
+            System.out.println("action: " + action);
 
             // ACTION ? fetchOneStudent
             if (action.equals("fetchOneStudent")) {
@@ -123,19 +125,12 @@ public class StudentController extends HttpServlet {
             // ACTION ? saveNewStudent
             if (action.equals("saveNewStudent")) {
 
-                String studentId = (String) jsonObject.get("studentId");
-                String classId = (String) jsonObject.get("classId");
-                String studentName = (String) jsonObject.get("studentName");
                 //Query the DB
                 SQLState sqlState = studentDao.saveNewStudent(jsonObject);
-                Student oneStudent = null;
-
-                //Serialize the oneStudent object
-                String studentJsonString = new Gson().toJson(oneStudent);
                 // Returns call originated in the client
                 PrintWriter out = response.getWriter();
                 response.setContentType("application/json");
-                out.println(studentJsonString);
+                out.println(new Gson().toJson(sqlState));
                 out.flush();
             }
 

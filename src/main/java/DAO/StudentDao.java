@@ -14,6 +14,7 @@ public interface StudentDao {
     public Student fetchOneStudent(String id) throws SQLException;
     public SQLState updateOneStudent(JSONObject jsonObject)throws SQLException;
     public SQLState deleteOneStudent(JSONObject jsonObject)throws SQLException;
+    public SQLState saveNewStudent(JSONObject jsonObject)throws SQLException;
 }
 
 
