@@ -18,34 +18,42 @@
     <tr>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
         <a class=""
-           href='./student-controller'><h5><i class="material-icons" style="color:#4CAF50">group</i> Student list</h5></a>
+           href='./student-controller'><h5><i class="material-icons" style="cxolor:#4CAF50">group</i> Student
+            list</h5></a>
         </div></td>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./teacher-controller'><h5><i class="material-icons" style="color:#536DFE">record_voice_over</i> Teacher list</h5></a>
-        </div></td>
-    </tr>
-    <tr>
-        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./subject-controller'><h5><i class="material-icons" style="color:#FF5722">reorder</i> Subject list</h5></a>
-        </div></td>
-        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./class-controller'><h5><i class="material-icons" style="color:#E040FB">picture_in_picture_alt</i> Class list</h5></a>
+            <a href='./teacher-controller'><h5><i class="material-icons" style="cxolor:#536DFE">record_voice_over</i>
+                Teacher list</h5></a>
         </div></td>
     </tr>
     <tr>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./-controller'><h5><i class="material-icons" style="color:#FFC107">poll</i> Student Report</h5></a>
+            <a href='./subject-controller'><h5><i class="material-icons" style="cxolor:#FF5722">reorder</i> Subject
+                list</h5></a>
         </div></td>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./-controller'><h5><i class="material-icons" style="color:#AFB42B">storage</i> Class Report</h5></a>
+            <a href='./clase-controller'><h5><i class="material-icons" style="cxolor:#E040FB">picture_in_picture_alt
+            </i> Class list</h5></a>
         </div></td>
     </tr>
     <tr>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./-controller'><h5><i class="material-icons" style="color:#536DFE">swap_horiz</i> Assign Subjects to Class</h5></a>
+            <a
+                    href='./-controller'><h5><i class="material-icons" style="cxolor:#FFC107">poll</i> Student Report</h5></a>
         </div></td>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./-controller'><h5><i class="material-icons" style="color:#E91E63">system_update_alt</i> Assign Teachers to
+            <a href='./-controller'><h5><i class="material-icons" style="cxolor:#AFB42B">storage</i> Class
+                Report</h5></a>
+        </div></td>
+    </tr>
+    <tr>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./-controller'><h5><i class="material-icons" style="cxolor:#536DFE">swap_horiz</i> Assign
+                Subjects to Class</h5></a>
+        </div></td>
+        <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
+            <a href='./-controller'><h5><i class="material-icons" style="cxolor:#E91E63">system_update_alt</i> Assign
+                Teachers to
                 Subject</h5></a>
         </div></td>
     </tr>

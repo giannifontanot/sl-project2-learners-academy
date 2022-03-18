@@ -1,47 +1,28 @@
 
 package DAOImpl;
 
-import DAO.StudentDao;
+import DAO.ClaseDao;
+import DAO.ClaseDao;
 import db.DatabaseConnection;
+import model.Clase;
+import model.SQLState;
+import model.Clase;
+import org.json.JSONObject;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Clase;
-import model.SQLState;
-import model.Student;
-import org.json.JSONObject;
-
-public class StudentDaoImpl implements StudentDao {
-    List<Student> students = new ArrayList();
-    List<Clase> classes = new ArrayList();
-    Student student = null;
+public class ClaseDaoImpl implements ClaseDao {
+    List<Clase> classes = new ArrayList<>();
+    Clase clase = null;
     Connection conn;
 
-    public StudentDaoImpl() throws SQLException, ClassNotFoundException {
+    public ClaseDaoImpl() throws SQLException, ClassNotFoundException {
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         this.conn = databaseConnection.getConnection();
     }
 
-    public List<Student> getAllStudents() throws SQLException {
-        Statement st = this.conn.createStatement();
-        ResultSet rs = st.executeQuery("select students.student_id, students.student_name, classes.class_name\n" +
-                "from classes, students\n" +
-                "where classes.class_id=students.class_id");
-
-        while (rs.next()) {
-            int studentId = rs.getInt("student_id");
-            String classId = rs.getString("class_name");
-            String studentName = rs.getString("student_name");
-            Student student = new Student(studentId, classId, studentName);
-            this.students.add(student);
-            System.out.format(" ----> %s, %s, %s\n", studentId, classId, studentName);
-        }
-
-        st.close();
-        return this.students;
-    }
 
     public List<Clase> getAllClasses() throws SQLException {
         Statement st = this.conn.createStatement();
@@ -59,38 +40,37 @@ public class StudentDaoImpl implements StudentDao {
         return this.classes;
     }
 
-    public Student fetchOneStudent(String id) {
+    public Clase fetchOneClass(String id) {
         try {
             Statement st = this.conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM students where student_id = " + id);
-            System.out.println("---> SELECT * FROM students where student_id = " + id);
+            ResultSet rs = st.executeQuery("SELECT * FROM classes where class_id = " + id);
+            System.out.println("---> SELECT * FROM classes where class_id = " + id);
             while (rs.next()) {
-                int studentId = rs.getInt("student_id");
                 String classId = rs.getString("class_id");
-                String studentName = rs.getString("student_name");
-                student = new Student(studentId, classId, studentName);
+                String className = rs.getString("class_name");
+                clase = new Clase(classId, className);
             }
 
             st.close();
         } catch (SQLException e) {
-            System.out.println("StudentDaoImp > fetchOneStudent > " + e.getSQLState() + " - " + e.getMessage());
+            System.out.println("ClaseDaoImp > fetchOneClase > " + e.getSQLState() + " - " + e.getMessage());
         }
-        return this.student;
+        return this.clase;
     }
 
 
     @Override
-    public SQLState deleteOneStudent(JSONObject jsonObject) {
+    public SQLState deleteOneClass(JSONObject jsonObject) {
 
         SQLState sqlState = new SQLState();
-        System.out.println("-----> deleteOneStudent: ");
+        System.out.println("-----> deleteOneClase: ");
         try {
             // SQL String
-            String delete = " delete from  students  where student_id = ?";
+            String delete = " delete from  classes  where class_id = ?";
             System.out.println("----> delete: " + delete);
 
             PreparedStatement st = this.conn.prepareStatement(delete);
-            st.setInt(1, jsonObject.getInt("deleteStudentId"));
+            st.setInt(1, jsonObject.getInt("deleteClassId"));
 
             // Update the database
             int code = st.executeUpdate();
@@ -100,10 +80,10 @@ public class StudentDaoImpl implements StudentDao {
 
             if (code > 0) {
                 sqlState.setCode(0);
-                sqlState.setMessage("Student deleted successfully");
+                sqlState.setMessage("Clase deleted successfully");
             } else {
                 sqlState.setCode(-1);
-                sqlState.setMessage("Error when trying to delete Student.");
+                sqlState.setMessage("Error when trying to delete Clase.");
             }
             return sqlState;
 
@@ -115,19 +95,19 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public SQLState updateOneStudent(JSONObject jsonObject) {
+    public SQLState updateOneClass(JSONObject jsonObject) {
 
         SQLState sqlState = new SQLState();
-        System.out.println("-----> updateOneStudent: ");
+        System.out.println("-----> updateOneClase: ");
         try {
             // SQL String
-            String update = " update students  set class_id = ?, student_name = ? where student_id = ?";
+            String update = " update classes  set class_name = ? where class_id = ?";
             System.out.println("----> Update: " + update);
             PreparedStatement st = this.conn.prepareStatement(update);
-
-            st.setString(1, jsonObject.getString("classId"));
-            st.setString(2, jsonObject.getString("studentName"));
-            st.setInt(3, jsonObject.getInt("studentId"));
+            System.out.println("classId: " + jsonObject.getString("classId"));
+            System.out.println("className: " + jsonObject.getString("className"));
+            st.setString(1, jsonObject.getString("className"));
+            st.setString(2, jsonObject.getString("classId"));
 
             // Update the database
             int code = st.executeUpdate();
@@ -137,10 +117,10 @@ public class StudentDaoImpl implements StudentDao {
 
             if (code > 0) {
                 sqlState.setCode(0);
-                sqlState.setMessage("Student updated successfully");
+                sqlState.setMessage("Clase updated successfully");
             } else {
                 sqlState.setCode(-1);
-                sqlState.setMessage("Error when trying to update Student.");
+                sqlState.setMessage("Error when trying to update Class.");
             }
             return sqlState;
 
@@ -152,19 +132,18 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public SQLState saveNewStudent(JSONObject jsonObject) {
+    public SQLState saveNewClass(JSONObject jsonObject) {
 
         SQLState sqlState = new SQLState();
-        System.out.println("-----> updateOneStudent: ");
+        System.out.println("-----> saveNewClase: ");
         try {
             // SQL String
-            String insert = " insert into students (student_id, class_id, student_name) values (?, ?, ?) ";
+            String insert = " insert into classes (class_id, class_name) values (?, ?) ";
             System.out.println("----> insert: " + insert);
             PreparedStatement st = this.conn.prepareStatement(insert);
 
-            st.setInt(1, jsonObject.getInt("studentId"));
-            st.setString(2, jsonObject.getString("classId"));
-            st.setString(3, jsonObject.getString("studentName"));
+            st.setString(1, jsonObject.getString("classId"));
+            st.setString(2, jsonObject.getString("className"));
 
             // Update the database
             int code = st.executeUpdate();
@@ -174,10 +153,10 @@ public class StudentDaoImpl implements StudentDao {
 
             if (code > 0) {
                 sqlState.setCode(0);
-                sqlState.setMessage("Student created successfully");
+                sqlState.setMessage("Clase created successfully");
             } else {
                 sqlState.setCode(-1);
-                sqlState.setMessage("Error when trying to create new Student.");
+                sqlState.setMessage("Error when trying to create new Class.");
             }
             return sqlState;
 
