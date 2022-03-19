@@ -42,13 +42,14 @@
                     href='./-controller'><h5><i class="material-icons" style="cxolor:#FFC107">poll</i> Student Report</h5></a>
         </div></td>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./-controller'><h5><i class="material-icons" style="cxolor:#AFB42B">storage</i> Class
+            <a href='./class-subject-controller'><h5><i class="material-icons" style="cxolor:#AFB42B">storage</i> Class
                 Report</h5></a>
         </div></td>
     </tr>
     <tr>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./-controller'><h5><i class="material-icons" style="cxolor:#536DFE">swap_horiz</i> Assign
+            <a href='./-controller'><h5><i class="material-icons" style="cxolor:#536DFE">swap_horiz</i>
+                Assign
                 Subjects to Class</h5></a>
         </div></td>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
