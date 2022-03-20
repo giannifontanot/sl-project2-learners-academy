@@ -48,9 +48,8 @@
     </tr>
     <tr>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./-controller'><h5><i class="material-icons" style="cxolor:#536DFE">swap_horiz</i>
-                Assign
-                Subjects to Class</h5></a>
+            <a href='./subjects-per-class-controller'><h5><i class="material-icons" style="cxolor:#536DFE">swap_horiz</i>
+                Assign Subjects to One Class</h5></a>
         </div></td>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
             <a href='./-controller'><h5><i class="material-icons" style="cxolor:#E91E63">system_update_alt</i> Assign

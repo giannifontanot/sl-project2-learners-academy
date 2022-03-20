@@ -4,6 +4,7 @@
 <%@ page import="model.Subject" %>
 <%@ page import="model.Clase" %>
 <%@ page import="model.Teacher" %>
+<%@ page import="model.SubjectPerClass" %>
 
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
@@ -14,127 +15,180 @@
 
 <%@include file="includes/topNav.jsp" %>
 
-<br />
+<br/>
 <div class="container">
     <div class="col s12 m7">
-        <h2 class="header">Subjects</h2>
+        <h2 class="header">Subjects Per Class</h2>
         <div class="card horizontal">
-            <div class="card-image">
-                <img src="https://placeimg.com/250/450/nature">
+            <div class="card-stacked">
+                <div class="card-content">
+
+                    <h4 class="header">Classes</h4>
+                    <table class="striped card-panel highlight" id="myTable">
+                        <thead>
+                        <tr>
+                            <th class="center-align">ID</th>
+                            <th class="center-align">Class Name</th>
+                            <th class="center-align">Choose</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <%
+                            List<Clase> classesList = (List<Clase>) request.getAttribute("classesList");
+                            Clase claseSelected = (Clase) request.getAttribute("claseSelected");
+
+                            // Paint the rows of the subject table
+                            for (Clase clase : classesList) {
+                                out.println("<tr>");
+                                out.println("<td class=\"center-align\">" + clase.getClassId());
+                                out.println("</td><td class=\"center-align\">");
+                                out.println(clase.getClassName());
+                                out.println("<td class=\"center-align\">" +
+                                        "<a class=\"waves-effect waves-light btn-small accent-color\" " +
+                                        "href=\"/sl_project2_learners_academy/subjects-per-class-controller?pClaseId=" + clase.getClassId() + "&pClaseName=" + clase.getClassName() + "\">" +
+                                        "<i class=\"material-icons right\">forward</i>" + clase.getClassName() + "</a>");
+                                out.println("</td><td>");
+                                out.println("</td></tr>");
+                            }
+                        %>
+                        </tbody>
+                    </table>
+
+
+                </div>
             </div>
             <div class="card-stacked">
                 <div class="card-content">
-    <table class="striped card-panel highlight" id="myTable">
-        <thead>
-        <tr>
-            <th class="center-align">Edit</th>
-            <th class="center-align">ID</th>
-            <th class="center-align">Subject Name</th>
-            <th class="center-align">Teacher</th>
-            <th class="center-align">Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            List<Subject> subjectsList = (List<Subject>) request.getAttribute("subjectsList");
+                    <h4 class="header">Subjects of <%=claseSelected.getClassName()%>
+                    </h4>
+                    <table class="striped card-panel highlight light-primary-color" id="myTable">
+                        <thead>
+                        <tr>
+                            <th class="center-align">ID</th>
+                            <th class="center-align">Subject Name</th>
+                            <th class="center-align">Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <%
+                            List<SubjectPerClass> subjectsPerClassList =
+                                    (List<SubjectPerClass>) request.getAttribute("subjectsPerClassList");
 
-            // Paint the rows of the subject table
-            for (Subject subject : subjectsList) {
-                out.println("");
-                out.println("<tr><td class=\"center-align\">");
-                out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + subject.getSubjectId() +
-                        "\")'>" +
-                        "<i class=\"material-icons\">edit</i></a>");
-                out.println("</td><td class=\"center-align\">");
-                out.println(subject.getSubjectId());
-                out.println("</td><td>");
-                out.println(subject.getSubjectName());
-                out.println("</td><td class=\"center-align\">");
-                out.println(subject.getTeacherName());
-                out.println("</td><td class=\"center-align\">");
-                out.println("<a href='javascript:fOpenDelete(\"" + subject.getSubjectId() +
-                        "\")'><i class=\"material-icons\">delete</i></a>");
-                out.println("</td></tr>");
-            }
-        %>
-        </tbody>
-    </table>
+                            // Paint the rows of the subject table
+                            for (SubjectPerClass subjectPerClass : subjectsPerClassList) {
+                                out.println("");
+                                out.println("<tr><td class=\"center-align\">");
+                                out.println(subjectPerClass.getSubjectId());
+                                out.println("</td><td>");
+                                out.println(subjectPerClass.getSubjectName());
+                                out.println("</td><td class=\"center-align\">");
+                                out.println("<a href='javascript:fOpenDelete(" +
+                                        "\"" + subjectPerClass.getClassId() + "\", " +
+                                        "\"" + subjectPerClass.getSubjectId() + "\", " +
+                                        "\"" + subjectPerClass.getSubjectName() + "\")'>" +
+                                        "<i class=\"material-icons\">delete</i></a>");
+                                out.println("</td></tr>");
+                            }
+                        %>
+                        </tbody>
+                    </table>
 
 
-                </div>
-                <div class="card-action">
-                    <div class="col-md-12 center text-center">
-                        <span class="left" id="total_reg"></span>
-                        <ul class="pagination pager" id="myPager"></ul>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();"><i class="material-icons">add</i></a>
+    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenSubjectsAvailable();">
+        <i class="material-icons">add</i></a>
 </div>
 <a id='modalLink' class="waves-effect waves-light btn hide modal-trigger" href="#modal1">Modal</a>
+<a id='modalLink2' class="waves-effect waves-light btn hide modal-trigger" href="#modal2">Modal2</a>
 <!-- Modal Structure -->
 <div id="modal1" class="modal">
     <form id="form1" class="col s12">
-    <div class="preloader-background" id="preloader">
-        <div class="preloader-wrapper big active">
-            <div class="spinner-layer spinner-blue-only">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="gap-patch">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
+        <div class="preloader-background" id="preloader">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-content">
-        <h4>Subject Detail</h4>
-        <div id="contenido">
+        <div class="modal-content">
+            <h4>Subjects Available</h4>
+            <div id="contenido">
                 <div class="row">
                     <div class="input-field col s12">
-                        <input type="text" id="subjectId" name="subjectId" value="">
-                        <label for="subjectId" class="active">Subject</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <select id="teacherId" name="teacherId" class="select">
-                            <option value="" disabled selected>Select the subject's teacher</option>
+                        <select id="subjectId" name="subjectId" class="select">
+                            <option value="" disabled selected>Select the available subject</option>
 
-    <%
-        List<Teacher> teachersList = (List<Teacher>) request.getAttribute("teachersList");
+                            <%
+                                List<Subject> subjectsList = (List<Subject>) request.getAttribute("subjectsAvailableList");
 
-        // Paint the rows of the subject table
-        for (Teacher teacher : teachersList) {
-            out.println("<option value=\"" + teacher.getTeacherId() + "\">");
-            out.println(teacher.getTeacherName());
-            out.println("</option>");
-        }
-    %>
+                                // Paint the rows of the subject table
+                                for (Subject subject : subjectsList) {
+                                    out.println("<option value=\"" + subject.getSubjectId() + "\">");
+                                    out.println("(" + subject.getSubjectId() + ") " + subject.getSubjectName());
+                                    out.println("</option>");
+                                }
+                            %>
                         </select>
-                        <label for="teacherId" class="active">Subject's Teacher</label>
+                        <label for="subjectId" class="active">Subjects Available</label>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input type="text" id="subjectName" name="subjectName" value="">
-                        <label for="subjectName" class="active">Subject Name</label>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-light btn accent-color" type="submit"><i
+                            class="material-icons left">save
+                    </i>Save Changes
+                    </button>
                 </div>
             </div>
-                <input type="hidden" id="action" name="action" value="">
-                <input type="hidden" id="deleteSubjectId" name="deleteSubjectId" value="">
-
+            <input type="text" id="action" name="action" value="">
+            <input type="text" id="classId" name="classId" value="<%=claseSelected.getClassId()%>">
         </div>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-close waves-effect waves-light btn accent-color" type="submit"><i class="material-icons left">save
-        </i>Save Changes</button>
-    </div>
+    </form>
+</div>
+
+<div id="modal2" class="modal">
+    <form id="form2" class="col s12">
+        <div class="preloader-background" id="preloader2">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-content">
+            <h4>Delete Subject from Class</h4>
+            <br />
+            <p id="card-text">
+                Click <b>SAVE CHANGES</b> if you want to remove the subject.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-close waves-effect waves-light btn accent-color" type="submit">
+                <i class="material-icons left">save</i>Save Changes
+            </button>
+        </div>
+        <input type="hidden" id="action" name="action" value="">
+        <input type="hidden" id="deleteClassId" name="deleteClassId" value="<%=claseSelected.getClassId()%>">
+        <input type="hidden" id="deleteSubjectId" name="deleteSubjectId" value="">
+        <input type="hidden" id="deleteSubjectName" name="deleteSubjectName" value="">
     </form>
 </div>
 
@@ -145,152 +199,76 @@
         const data = new FormData(event.target);
         const oFormEntries = Object.fromEntries(data.entries());
         console.log("----> about to saveOneSubject: " + oFormEntries.toString());
-        await saveOneSubject(oFormEntries);
+        await saveNewSubject(oFormEntries);
     }
 
     const form = document.querySelector('#form1');
     form.addEventListener('submit', handleSubmit);
+
+    async function handleSubmitDelete(event) {
+        event.preventDefault();
+
+        const data = new FormData(event.target);
+        const oFormEntries = Object.fromEntries(data.entries());
+        console.log("----> about to deleteOneSubject: " + oFormEntries.toString());
+        await deleteOneSubject(oFormEntries);
+    }
+
+    const form2 = document.querySelector('#form2');
+    form2.addEventListener('submit', handleSubmitDelete);
 </script>
 
 
 <!--  Scripts-->
 <script>
-    async function fOpenEdit(pId) {
+    async function fOpenSubjectsAvailable() {
 
         // Set the action
-        document.getElementById("action").value = "updateOneSubject";
+        const form1El = document.getElementById("form1");
+        form1El.elements["action"].value = "saveNewSubjectPerClass";
 
         // Trigger the Modal to open
         document.getElementById('modalLink').click();
         document.getElementById("preloader").style.display = "flex"; // this centers the spinner in the modal window
 
-        fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify({action: "fetchOneSubject", subjectId: pId})
+        try {
 
-        }).then(res => res.text()).then(async (jsonString) => {
-            console.log(" -------> fetch: " + jsonString);
-            try {
+            //Re-initialize the select controls
+            M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
+            M.updateTextFields();
 
-                //Painting the values
-                const jsonObject = JSON.parse(jsonString);
-                console.log("---> jsonString: " + jsonString);
-                document.querySelector("#subjectId").value = jsonObject.subjectId;
-                document.querySelector("#subjectName").value = jsonObject.subjectName;
-                // Display the modal, hide the spinner
-                //document.querySelector("#teacherId").value = jsonObject.teacherId;
-                const classEl = document.getElementById("teacherId");
+            await delay(1000);
+            document.getElementById("preloader").style.display = "none";
 
-                for(var i=0; i<classEl.options.length; i++){
-                    if(classEl.options[i].value == jsonObject.teacherId){
-                        console.log(classEl.options[i].value + " - " + jsonObject.teacherId);
-                        classEl.options.selectedIndex = i;
-                    }
-                }
-                //Re-initialize the select controls
-                M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
-                M.updateTextFields();
-
-
-
-                await delay(1000);
-                document.getElementById("preloader").style.display = "none";
-
-            } catch (e) {
-                // On Error
-                console.log("ERROR: fetchOneSubject/querySelector - " + e);
-            }
-
-        });
+        } catch (e) {
+            // On Error
+            console.log("ERROR: fetchOneSubject/querySelector - " + e);
+        }
     }
 
-    async function fOpenDelete(pId) {
+    async function fOpenDelete(classId, subjectId, subjectName) {
 
         // Set the action
-        document.getElementById("action").value = "deleteOneSubject";
+        const form2El = document.getElementById("form2");
+        form2El.elements["action"].value = "deleteOneSubject";
+        document.getElementById("deleteClassId").value = classId;
+        document.getElementById("deleteSubjectId").value = subjectId;
+        document.getElementById("deleteSubjectName").value = subjectName;
 
         // Trigger the Modal to open
-        document.getElementById('modalLink').click();
-        document.getElementById("preloader").style.display = "flex"; // this centers the spinner in the modal window
-
-        fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify({action: "fetchOneSubject", subjectId: pId})
-
-        }).then(res => res.text()).then(async (jsonString) => {
-            console.log(" -------> fetch: " + jsonString);
-            try {
-
-                //Painting the values AND disabling the controls
-                const jsonObject = JSON.parse(jsonString);
-                console.log("---> jsonString: " + jsonString);
-                document.querySelector("#subjectId").value = jsonObject.subjectId;
-                document.querySelector("#subjectName").value = jsonObject.subjectName;
-                // Display the modal, hide the spinner
-                //document.querySelector("#teacherId").value = jsonObject.teacherId;
-                const teacherEl = document.getElementById("teacherId");
-
-                for(var i=0; i<teacherEl.options.length; i++){
-                    if(teacherEl.options[i].value == jsonObject.teacherId){
-                        console.log(teacherEl.options[i].value + " - " + jsonObject.teacherId);
-                        teacherEl.options.selectedIndex = i;
-                    }
-                }
-                //Re-initialize the select controls
-                teacherEl.disabled = true;
-                M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
-                M.updateTextFields();
-
-                // Disabling the controls
-                document.querySelector("#subjectId").disabled  = true;
-                document.querySelector("#subjectName").disabled  = true;
-
-                //Setting the Id to delete
-                document.querySelector("#deleteSubjectId").value = jsonObject.subjectId;
-                await delay(1000);
-                document.getElementById("preloader").style.display = "none";
-
-            } catch (e) {
-                // On Error
-                console.log("ERROR: fetchOneSubject/querySelector - " + e);
-            }
-
-        });
-    }
-
-    async function fOpenNew() {
-
-        // Set the action
-        document.getElementById("action").value = "saveNewSubject";
-
-        //Clean and enabling the controls
-        document.querySelector("#subjectId").disabled  = false;
-        document.querySelector("#subjectName").disabled  = false;
-        document.getElementById("teacherId").disabled = false;
-
-        M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
-        M.updateTextFields();
-
-        // Trigger the Modal to open
-        document.getElementById('modalLink').click();
-        document.getElementById("preloader").style.display = "none";
+        document.getElementById('modalLink2').click();
+        document.getElementById("preloader2").style.display = "flex"; // this centers the spinner in the modal window
+        await delay(1000);
+        document.getElementById("preloader2").style.display = "none";
 
     }
 
     //ACTION: updateOneSubject or saveNewSubject
-    function saveOneSubject(oFormEntries) {
+    function saveNewSubject(oFormEntries) {
         console.log(" -----> saveOneSubject:" + "");
-        console.log(" -----> action: " + document.getElementById('action').value);
+        console.log(" -----> action: " + document.getElementById('action').value); //saveNewSubjectPerClass
         try {
-            fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+            fetch("http://localhost:8080/sl_project2_learners_academy/subjects-per-class-controller", {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -309,7 +287,9 @@
                             jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Subject NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
                                 " - " +
                                 jsonObject.message + "</td></tr></table>"
-                        , completeCallback: function(){location.reload()}
+                        , completeCallback: function () {
+                            location.reload()
+                        }
                     })
                 } catch (e) {
                     // On Error
@@ -322,12 +302,12 @@
         }
     }
 
-    //ACTION: updateOneSubject or saveNewSubject
+    //ACTION: deleteOneSubject
     function deleteOneSubject(oFormEntries) {
         console.log(" -----> deleteOneSubject:" + "");
         console.log(" -----> action: " + document.getElementById('action').value);
         try {
-            fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+            fetch("http://localhost:8080/sl_project2_learners_academy/subjects-per-class-controller", {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -336,7 +316,7 @@
                 body: JSON.stringify(oFormEntries)
             })
                 .then(res => res.text()).then((jsonReturnString) => {
-                console.log(" -------> subjectjsp fetch: " + jsonReturnString);
+                console.log(" -------> subjectsPerClass.jsp fetch: " + jsonReturnString);
                 try {
 
                     //Answer received from the servlet
@@ -346,7 +326,9 @@
                             jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Subject NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
                                 " - " +
                                 jsonObject.message + "</td></tr></table>"
-                        , completeCallback: function(){location.reload()}
+                        , completeCallback: function () {
+                            location.reload()
+                        }
                     })
                 } catch (e) {
                     // On Error
