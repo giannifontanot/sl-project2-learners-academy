@@ -16,7 +16,7 @@
                 <img src="https://placeimg.com/500/250/tech">
             </div>
             <div class="card-stacked">
-                <form method="GET" action="./main-controller">
+                <form method="GET" action="./login-controller">
                     <div class="card-content primary-text-color">
                         <span class="card-title ">Admin Login</span>
                         <input type="text" name="username" placeholder="username" value="admin"/><br/>

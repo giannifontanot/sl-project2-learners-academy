@@ -23,28 +23,29 @@ public class LoginDaoImpl implements LoginDao {
     }
 
 
-    public boolean verifyCredentials(User user) throws SQLException {
+    public boolean verifyCredentials(User user) {
         boolean authorized = false;
+        ResultSet rs;
+        Statement st = null;
 
-        String userId = user.getUserId();
-        String userPassword = user.getPassword();
+        try {
+            st = this.conn.createStatement();
+            String sql = "select users.user_password " +
+                    "from users " +
+                    "where users.user_id = '" + user.getUserId() + "'" +
+                    " and users.user_password = '" + user.getPassword() + "'";
 
-        Statement st = this.conn.createStatement();
-        String sql = "select users.user_password from users where users.user_id = '" + userId + "'";
+            System.out.println(sql);
+            rs = st.executeQuery(sql);
 
-        System.out.println(sql);
-        ResultSet rs = st.executeQuery(sql);
-
-        while (rs.next()) {
-            userPassword = rs.getString("user_password");
-            System.out.println("userPassword: " + userPassword);
-            System.out.println("user.getPassword(): " + user.getPassword());
+            if (rs.next()) {
+                authorized = true;
+            }
+            st.close();
+        } catch (SQLException e) {
+            authorized = false;
+        } finally {
+            return authorized;
         }
-
-        if (userPassword.equals(user.getPassword())) {
-            authorized = true;
-        }
-        st.close();
-        return authorized;
     }
 }

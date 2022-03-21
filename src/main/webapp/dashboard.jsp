@@ -9,7 +9,6 @@
 <%@include file="includes/header.jsp"%>
 
 
-
 <body>
 <%@include file="includes/topNav.jsp"%>
 <div class="container">
