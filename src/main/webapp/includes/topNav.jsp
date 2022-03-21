@@ -4,11 +4,13 @@
             <i class="large material-icons">donut_small</i>Computer College
         </a>
         <ul class="right hide-on-med-and-down">
+            <li><a href="https://github.com/giannifontanot/">Gianni Fontanot</a></li>
             <li><a href="./main-controller">Dashboard</a></li>
             <li><a href="./">Logout</a></li>
         </ul>
 
         <ul id="nav-mobile" class="sidenav">
+            <li><a href="https://github.com/giannifontanot/">Gianni Fontanot</a></li>
             <li><a href="./main-controller">Dashboard</a></li>
         </ul>
         <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
