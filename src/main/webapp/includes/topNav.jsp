@@ -1,7 +1,7 @@
 <nav class="default-primary-color" role="navigation">
     <div class="nav-wrapper container">
         <a id="logo-container" href="#" class="brand-logo">
-            <i class="large material-icons">donut_small</i>Computer College
+            <i class="large material-icons">donut_small</i>Learner's Academy
         </a>
         <ul class="right hide-on-med-and-down">
             <li><a href="https://github.com/giannifontanot/">Gianni Fontanot</a></li>

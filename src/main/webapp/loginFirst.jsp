@@ -9,8 +9,8 @@
 <br/>
 <div class="container">
     <div class="col s12 m7">
-        <h2 class="header">Welcome to Learners' Academy</h2>
-        <p class="light">In order to use the roster and update information you need to login first.</p>
+        <h2 class="header red">Error When Trying to Login</h2>
+        <p class="light">Type the correct User and Password</p>
         <div class="card horizontal">
             <div class="card-image">
                 <img src="https://placeimg.com/500/250/tech">
