@@ -3,6 +3,7 @@ package DAOImpl;
 
 import DAO.SubjectDao;
 import db.DatabaseConnection;
+import model.SubjectFull;
 import model.Teacher;
 import model.SQLState;
 import model.Subject;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectDaoImpl implements SubjectDao {
-    List<Subject> subjects = new ArrayList();
+    List<SubjectFull> subjects = new ArrayList();
     List<Teacher> teachers = new ArrayList();
     Subject subject = null;
     Connection conn;
@@ -23,19 +24,28 @@ public class SubjectDaoImpl implements SubjectDao {
         this.conn = databaseConnection.getConnection();
     }
 
-    public List<Subject> getAllSubjects() throws SQLException {
+    public List<SubjectFull> getAllSubjects() throws SQLException {
+
+        String sql = "select classes.class_id, classes.class_name, " +
+                "subjects.subject_id, subjects.subject_name, " +
+                "teachers.teacher_id, teachers.teacher_name\n" +
+                "from class_subject, subjects, classes, teachers\n" +
+                "where class_subject.class_id = classes.class_id and\n" +
+                "class_subject.subject_id = subjects.subject_id and\n" +
+                "teachers.teacher_id=subjects.teacher_id\n" +
+                "order by classes.class_id";
+
         Statement st = this.conn.createStatement();
-        ResultSet rs = st.executeQuery("select subjects.subject_id, subjects.subject_name, teachers.teacher_id, " +
-                "teachers.teacher_name \n" +
-                "from teachers, subjects\n" +
-                "where teachers.teacher_id=subjects.teacher_id");
+        ResultSet rs = st.executeQuery(sql);
 
         while (rs.next()) {
+            String classId = rs.getString("class_id");
+            String className = rs.getString("class_name");
             String subjectId = rs.getString("subject_id");
             String subjectName = rs.getString("subject_name");
             int teacherId = rs.getInt("teacher_id");
             String teacherName = rs.getString("teacher_name");
-            Subject subject = new Subject(subjectId, subjectName, teacherId, teacherName);
+            SubjectFull subject = new SubjectFull(subjectId, subjectName, teacherId, teacherName, classId, className);
             this.subjects.add(subject);
             System.out.format(" ----> %s, %s, %s\n", subjectId, subjectName, teacherId, teacherName);
         }

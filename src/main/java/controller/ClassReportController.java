@@ -1,11 +1,11 @@
 package controller;
 
-import DAO.TeacherPerSubjectDao;
-import DAOImpl.TeacherPerSubjectDaoImpl;
+import DAO.StudentDao;
+import DAOImpl.StudentDaoImpl;
 import com.google.gson.Gson;
+import model.Clase;
 import model.SQLState;
-import model.Subject;
-import model.Teacher;
+import model.Student;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -19,46 +19,48 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet("/teacher-per-subject-controller")
-public class TeacherPerSubjectController extends HttpServlet {
+@WebServlet("/student-controller")
+public class ClassReportController extends HttpServlet {
+    private String message;
 
-    public void init(){
+    public void init() {
+        message = "";
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        TeacherPerSubjectDao teacherPerSubjectDao = null;
+        StudentDao studentDao = null;
         try {
-            teacherPerSubjectDao = new TeacherPerSubjectDaoImpl();
+            studentDao = new StudentDaoImpl();
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
 
-        List<Subject> subjectsList = null;
+        List<Student> studentsList = null;
 
         try {
-            subjectsList = teacherPerSubjectDao.getAllSubjects();
+            studentsList = studentDao.getAllStudents();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-        List<Teacher> teachersList = null;
+        List<Clase> classesList = null;
 
         try {
-            teachersList = teacherPerSubjectDao.getAllTeachers();
+            classesList = studentDao.getAllClasses();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-        request.setAttribute("teachersList", teachersList);
-        request.setAttribute("subjectsList", subjectsList);
-        request.getRequestDispatcher("TeacherPerSubject.jsp").forward(request, response);
+        request.setAttribute("classesList", classesList);
+        request.setAttribute("studentsList", studentsList);
+        request.getRequestDispatcher("students.jsp").forward(request, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        TeacherPerSubjectDao teacherPerSubjectDao = null;
+        StudentDao studentDao = null;
         try {
-            teacherPerSubjectDao = new TeacherPerSubjectDaoImpl();
+            studentDao = new StudentDaoImpl();
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -72,43 +74,29 @@ public class TeacherPerSubjectController extends HttpServlet {
             String action = (String) jsonObject.get("action");
             System.out.println("action: " + action);
 
-            // ACTION ? fetchOneSubject
-            if (action.equals("fetchOneSubject")) {
+            // ACTION ? fetchOneStudent
+            if (action.equals("fetchOneStudent")) {
 
                 //Query the DB
-                String subjectId = (String) jsonObject.get("subjectId");
-                Subject oneSubject = teacherPerSubjectDao.fetchOneSubject(subjectId);
+                String studentId = (String) jsonObject.get("studentId");
+                Student oneStudent = studentDao.fetchOneStudent(studentId);
 
-                //Serialize the oneSubject object
-                String subjectJsonString = new Gson().toJson(oneSubject);
+                //Serialize the oneStudent object
+                String studentJsonString = new Gson().toJson(oneStudent);
                 // Returns call originated in the client
                 PrintWriter out = response.getWriter();
                 response.setContentType("application/json");
-                System.out.println("subjectJsonString" + subjectJsonString);
-                out.println(subjectJsonString);
+                System.out.println("studentJsonString" + studentJsonString);
+                out.println(studentJsonString);
                 out.flush();
             }
 
-            // ACTION ? updateOneSubject or saveNewSubject
-            if (action.equals("updateOneSubject")) {
+            // ACTION ? updateOneStudent or saveNewStudent
+            if (action.equals("updateOneStudent")) {
 
                 //Query the DB
-                assert teacherPerSubjectDao != null;
-                SQLState sqlState = teacherPerSubjectDao.updateOneSubject(jsonObject);
-
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                out.println(new Gson().toJson(sqlState));
-                out.flush();
-            }
-
-            // ACTION ? deleteOneSubject
-            if (action.equals("deleteOneSubject")) {
-
-                //Query the DB
-                assert teacherPerSubjectDao != null;
-                SQLState sqlState = teacherPerSubjectDao.deleteOneSubject(jsonObject);
+                assert studentDao != null;
+                SQLState sqlState = studentDao.updateOneStudent(jsonObject);
 
                 // Returns call originated in the client
                 PrintWriter out = response.getWriter();
@@ -117,11 +105,25 @@ public class TeacherPerSubjectController extends HttpServlet {
                 out.flush();
             }
 
-            // ACTION ? saveNewSubject
-            if (action.equals("saveNewSubject")) {
+            // ACTION ? deleteOneStudent
+            if (action.equals("deleteOneStudent")) {
 
                 //Query the DB
-                SQLState sqlState = teacherPerSubjectDao.saveNewSubject(jsonObject);
+                assert studentDao != null;
+                SQLState sqlState = studentDao.deleteOneStudent(jsonObject);
+
+                // Returns call originated in the client
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json");
+                out.println(new Gson().toJson(sqlState));
+                out.flush();
+            }
+
+            // ACTION ? saveNewStudent
+            if (action.equals("saveNewStudent")) {
+
+                //Query the DB
+                SQLState sqlState = studentDao.saveNewStudent(jsonObject);
                 // Returns call originated in the client
                 PrintWriter out = response.getWriter();
                 response.setContentType("application/json");

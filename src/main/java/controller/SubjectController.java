@@ -5,6 +5,7 @@ import DAOImpl.SubjectDaoImpl;
 import com.google.gson.Gson;
 import model.SQLState;
 import model.Subject;
+import model.SubjectFull;
 import model.Teacher;
 import org.json.JSONObject;
 
@@ -35,7 +36,7 @@ public class SubjectController extends HttpServlet {
             ex.printStackTrace();
         }
 
-        List<Subject> subjectsList = null;
+        List<SubjectFull> subjectsList = null;
 
         try {
             subjectsList = subjectDao.getAllSubjects();

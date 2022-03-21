@@ -4,7 +4,6 @@
 <%@ page import="model.Subject" %>
 <%@ page import="model.Clase" %>
 <%@ page import="model.Teacher" %>
-<%@ page import="model.SubjectFull" %>
 
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
@@ -18,7 +17,7 @@
 <br />
 <div class="container">
     <div class="col s12 m7">
-        <h2 class="header">Subject List</h2>
+        <h2 class="header">Assign Teachers to Subject</h2>
         <div class="card horizontal">
             <div class="card-image">
                 <img src="https://placeimg.com/250/450/nature">
@@ -31,34 +30,33 @@
             <th class="center-align">Edit</th>
             <th class="center-align">ID</th>
             <th class="center-align">Subject Name</th>
-            <th class="center-align">Class Name</th>
             <th class="center-align">Teacher</th>
-            <th class="center-align">Delete</th>
+<%--            <th class="center-align">Delete</th>--%>
         </tr>
         </thead>
         <tbody>
         <%
-            List<SubjectFull> subjectsList = (List<SubjectFull>) request.getAttribute("subjectsList");
+            List<Subject> subjectsList = (List<Subject>) request.getAttribute("subjectsList");
 
             // Paint the rows of the subject table
-            for (SubjectFull subject : subjectsList) {
+            for (Subject subject : subjectsList) {
                 out.println("");
                 out.println("<tr><td class=\"center-align\">");
                 out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + subject.getSubjectId() +
                         "\")'>" +
                         "<i class=\"material-icons\">edit</i></a>");
-                out.println("</td><td cxlass=\"center-align\">&nbsp;&nbsp;");
+                out.println("</td><td class=\"center-align\">");
                 out.println(subject.getSubjectId());
                 out.println("</td><td>");
                 out.println(subject.getSubjectName());
                 out.println("</td><td class=\"center-align\">");
-                out.println(subject.getClassName());
-                out.println("</td><td class=\"center-align\">");
                 out.println(subject.getTeacherName());
-                out.println("</td><td class=\"center-align\">");
-                out.println("<a href='javascript:fOpenDelete(\"" + subject.getSubjectId() +
-                        "\")'><i class=\"material-icons\">delete</i></a>");
-                out.println("</td></tr>");
+                out.println("</td>");
+//                out.println("<td class=\"center-align\">");
+//                out.println("<a href='javascript:fOpenDelete(\"" + subject.getSubjectId() +
+//                        "\")'><i class=\"material-icons\">delete</i></a>");
+//                out.println("</td>");
+                out.println("</tr>");
             }
         %>
         </tbody>
@@ -97,7 +95,7 @@
         </div>
     </div>
     <div class="modal-content">
-        <h4>Subject Detail</h4>
+        <h4>Select New Teacher</h4>
         <div id="contenido">
                 <div class="row">
                     <div class="input-field col s12">
@@ -146,9 +144,18 @@
     async function handleSubmit(event) {
         event.preventDefault();
 
+        //Enable fields
+        document.getElementById("subjectId").removeAttribute('disabled');
+        document.getElementById("subjectName").removeAttribute('disabled');
+
         const data = new FormData(event.target);
         const oFormEntries = Object.fromEntries(data.entries());
         console.log("----> about to saveOneSubject: " + oFormEntries.toString());
+
+        //Re-initialize the select controls
+        M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
+        M.updateTextFields();
+
         await saveOneSubject(oFormEntries);
     }
 
@@ -168,7 +175,7 @@
         document.getElementById('modalLink').click();
         document.getElementById("preloader").style.display = "flex"; // this centers the spinner in the modal window
 
-        fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+        fetch("http://localhost:8080/sl_project2_learners_academy/teacher-per-subject-controller", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -195,10 +202,13 @@
                         classEl.options.selectedIndex = i;
                     }
                 }
+
+                document.getElementById("subjectId").disabled = true;
+                document.getElementById("subjectName").disabled = true;
+
                 //Re-initialize the select controls
                 M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
                 M.updateTextFields();
-
 
 
                 await delay(1000);
@@ -221,7 +231,7 @@
         document.getElementById('modalLink').click();
         document.getElementById("preloader").style.display = "flex"; // this centers the spinner in the modal window
 
-        fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+        fetch("http://localhost:8080/sl_project2_learners_academy/teacher-per-subject-controller", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -256,6 +266,8 @@
                 // Disabling the controls
                 document.querySelector("#subjectId").disabled  = true;
                 document.querySelector("#subjectName").disabled  = true;
+
+
 
                 //Setting the Id to delete
                 document.querySelector("#deleteSubjectId").value = jsonObject.subjectId;
@@ -294,7 +306,7 @@
         console.log(" -----> saveOneSubject:" + "");
         console.log(" -----> action: " + document.getElementById('action').value);
         try {
-            fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+            fetch("http://localhost:8080/sl_project2_learners_academy/teacher-per-subject-controller", {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -331,7 +343,7 @@
         console.log(" -----> deleteOneSubject:" + "");
         console.log(" -----> action: " + document.getElementById('action').value);
         try {
-            fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+            fetch("http://localhost:8080/sl_project2_learners_academy/teacher-per-subject-controller", {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'

@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <%@ page import="java.util.List" %>
-<%@ page import="model.Subject" %>
+<%@ page import="model.Student" %>
 <%@ page import="model.Clase" %>
-<%@ page import="model.Teacher" %>
-<%@ page import="model.SubjectFull" %>
 
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
@@ -15,68 +13,54 @@
 
 <%@include file="includes/topNav.jsp" %>
 
-<br />
+<br /><br />
 <div class="container">
-    <div class="col s12 m7">
-        <h2 class="header">Subject List</h2>
-        <div class="card horizontal">
-            <div class="card-image">
-                <img src="https://placeimg.com/250/450/nature">
-            </div>
-            <div class="card-stacked">
-                <div class="card-content">
+    <h3>Students</h3>
+    <br />
     <table class="striped card-panel highlight" id="myTable">
         <thead>
         <tr>
             <th class="center-align">Edit</th>
             <th class="center-align">ID</th>
-            <th class="center-align">Subject Name</th>
-            <th class="center-align">Class Name</th>
-            <th class="center-align">Teacher</th>
+            <th class="center-align">Student Name</th>
+            <th class="center-align">Class</th>
             <th class="center-align">Delete</th>
         </tr>
         </thead>
         <tbody>
         <%
-            List<SubjectFull> subjectsList = (List<SubjectFull>) request.getAttribute("subjectsList");
+            List<Student> studentsList = (List<Student>) request.getAttribute("studentsList");
 
-            // Paint the rows of the subject table
-            for (SubjectFull subject : subjectsList) {
+            // Paint the rows of the student table
+            for (Student student : studentsList) {
                 out.println("");
                 out.println("<tr><td class=\"center-align\">");
-                out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + subject.getSubjectId() +
+                out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + student.getStudentId() +
                         "\")'>" +
                         "<i class=\"material-icons\">edit</i></a>");
-                out.println("</td><td cxlass=\"center-align\">&nbsp;&nbsp;");
-                out.println(subject.getSubjectId());
+                out.println("</td><td class=\"center-align\">");
+                out.println(student.getStudentId());
                 out.println("</td><td>");
-                out.println(subject.getSubjectName());
+                out.println(student.getStudentName());
                 out.println("</td><td class=\"center-align\">");
-                out.println(subject.getClassName());
+                out.println(student.getClassId());
                 out.println("</td><td class=\"center-align\">");
-                out.println(subject.getTeacherName());
-                out.println("</td><td class=\"center-align\">");
-                out.println("<a href='javascript:fOpenDelete(\"" + subject.getSubjectId() +
+                out.println("<a href='javascript:fOpenDelete(\"" + student.getStudentId() +
                         "\")'><i class=\"material-icons\">delete</i></a>");
                 out.println("</td></tr>");
             }
         %>
         </tbody>
     </table>
-
-
-                </div>
-                <div class="card-action">
-                    <div class="col-md-12 center text-center">
-                        <span class="left" id="total_reg"></span>
-                        <ul class="pagination pager" id="myPager"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-md-12 center text-center">
+        <span class="left" id="total_reg"></span>
+        <ul class="pagination pager" id="myPager"></ul>
     </div>
-    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();"><i class="material-icons">add</i></a>
+
+    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();">
+        <i class="material-icons">add</i></a>
 </div>
+
 <a id='modalLink' class="waves-effect waves-light btn hide modal-trigger" href="#modal1">Modal</a>
 <!-- Modal Structure -->
 <div id="modal1" class="modal">
@@ -97,41 +81,41 @@
         </div>
     </div>
     <div class="modal-content">
-        <h4>Subject Detail</h4>
+        <h4>Student Detail</h4>
         <div id="contenido">
                 <div class="row">
                     <div class="input-field col s12">
-                        <input type="text" id="subjectId" name="subjectId" value="">
-                        <label for="subjectId" class="active">Subject</label>
+                        <input type="text" id="studentId" name="studentId" value="">
+                        <label for="studentId" class="active">Student</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <select id="teacherId" name="teacherId" class="select">
-                            <option value="" disabled selected>Select the subject's teacher</option>
+                        <select id="classId" name="classId" class="select">
+                            <option value="" disabled selected>Select the student's class</option>
 
     <%
-        List<Teacher> teachersList = (List<Teacher>) request.getAttribute("teachersList");
+        List<Clase> classesList = (List<Clase>) request.getAttribute("classesList");
 
-        // Paint the rows of the subject table
-        for (Teacher teacher : teachersList) {
-            out.println("<option value=\"" + teacher.getTeacherId() + "\">");
-            out.println(teacher.getTeacherName());
+        // Paint the rows of the student table
+        for (Clase clase : classesList) {
+            out.println("<option value=\"" + clase.getClassId() + "\">");
+            out.println(clase.getClassName());
             out.println("</option>");
         }
     %>
                         </select>
-                        <label for="teacherId" class="active">Subject's Teacher</label>
+                        <label for="clasId" class="active">Student's class</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input type="text" id="subjectName" name="subjectName" value="">
-                        <label for="subjectName" class="active">Subject Name</label>
+                        <input type="text" id="studentName" name="studentName" value="">
+                        <label for="studentName" class="active">Student Name</label>
                 </div>
             </div>
                 <input type="hidden" id="action" name="action" value="">
-                <input type="hidden" id="deleteSubjectId" name="deleteSubjectId" value="">
+                <input type="hidden" id="deleteStudentId" name="deleteStudentId" value="">
 
         </div>
     </div>
@@ -148,8 +132,8 @@
 
         const data = new FormData(event.target);
         const oFormEntries = Object.fromEntries(data.entries());
-        console.log("----> about to saveOneSubject: " + oFormEntries.toString());
-        await saveOneSubject(oFormEntries);
+        console.log("----> about to saveOneStudent: " + oFormEntries.toString());
+        await saveOneStudent(oFormEntries);
     }
 
     const form = document.querySelector('#form1');
@@ -162,19 +146,19 @@
     async function fOpenEdit(pId) {
 
         // Set the action
-        document.getElementById("action").value = "updateOneSubject";
+        document.getElementById("action").value = "updateOneStudent";
 
         // Trigger the Modal to open
         document.getElementById('modalLink').click();
         document.getElementById("preloader").style.display = "flex"; // this centers the spinner in the modal window
 
-        fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+        fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({action: "fetchOneSubject", subjectId: pId})
+            body: JSON.stringify({action: "fetchOneStudent", studentId: pId})
 
         }).then(res => res.text()).then(async (jsonString) => {
             console.log(" -------> fetch: " + jsonString);
@@ -183,15 +167,15 @@
                 //Painting the values
                 const jsonObject = JSON.parse(jsonString);
                 console.log("---> jsonString: " + jsonString);
-                document.querySelector("#subjectId").value = jsonObject.subjectId;
-                document.querySelector("#subjectName").value = jsonObject.subjectName;
+                document.querySelector("#studentId").value = jsonObject.studentId;
+                document.querySelector("#studentName").value = jsonObject.studentName;
                 // Display the modal, hide the spinner
-                //document.querySelector("#teacherId").value = jsonObject.teacherId;
-                const classEl = document.getElementById("teacherId");
+                //document.querySelector("#classId").value = jsonObject.classId;
+                const classEl = document.getElementById("classId");
 
                 for(var i=0; i<classEl.options.length; i++){
-                    if(classEl.options[i].value == jsonObject.teacherId){
-                        console.log(classEl.options[i].value + " - " + jsonObject.teacherId);
+                    if(classEl.options[i].value == jsonObject.classId){
+                        console.log(classEl.options[i].value + " - " + jsonObject.classId);
                         classEl.options.selectedIndex = i;
                     }
                 }
@@ -206,7 +190,7 @@
 
             } catch (e) {
                 // On Error
-                console.log("ERROR: fetchOneSubject/querySelector - " + e);
+                console.log("ERROR: fetchOneStudent/querySelector - " + e);
             }
 
         });
@@ -215,19 +199,19 @@
     async function fOpenDelete(pId) {
 
         // Set the action
-        document.getElementById("action").value = "deleteOneSubject";
+        document.getElementById("action").value = "deleteOneStudent";
 
         // Trigger the Modal to open
         document.getElementById('modalLink').click();
         document.getElementById("preloader").style.display = "flex"; // this centers the spinner in the modal window
 
-        fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+        fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({action: "fetchOneSubject", subjectId: pId})
+            body: JSON.stringify({action: "fetchOneStudent", studentId: pId})
 
         }).then(res => res.text()).then(async (jsonString) => {
             console.log(" -------> fetch: " + jsonString);
@@ -236,35 +220,35 @@
                 //Painting the values AND disabling the controls
                 const jsonObject = JSON.parse(jsonString);
                 console.log("---> jsonString: " + jsonString);
-                document.querySelector("#subjectId").value = jsonObject.subjectId;
-                document.querySelector("#subjectName").value = jsonObject.subjectName;
+                document.querySelector("#studentId").value = jsonObject.studentId;
+                document.querySelector("#studentName").value = jsonObject.studentName;
                 // Display the modal, hide the spinner
-                //document.querySelector("#teacherId").value = jsonObject.teacherId;
-                const teacherEl = document.getElementById("teacherId");
+                //document.querySelector("#classId").value = jsonObject.classId;
+                const classEl = document.getElementById("classId");
 
-                for(var i=0; i<teacherEl.options.length; i++){
-                    if(teacherEl.options[i].value == jsonObject.teacherId){
-                        console.log(teacherEl.options[i].value + " - " + jsonObject.teacherId);
-                        teacherEl.options.selectedIndex = i;
+                for(var i=0; i<classEl.options.length; i++){
+                    if(classEl.options[i].value == jsonObject.classId){
+                        console.log(classEl.options[i].value + " - " + jsonObject.classId);
+                        classEl.options.selectedIndex = i;
                     }
                 }
                 //Re-initialize the select controls
-                teacherEl.disabled = true;
+                classEl.disabled = true;
                 M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
                 M.updateTextFields();
 
                 // Disabling the controls
-                document.querySelector("#subjectId").disabled  = true;
-                document.querySelector("#subjectName").disabled  = true;
+                document.querySelector("#studentId").disabled  = true;
+                document.querySelector("#studentName").disabled  = true;
 
                 //Setting the Id to delete
-                document.querySelector("#deleteSubjectId").value = jsonObject.subjectId;
+                document.querySelector("#deleteStudentId").value = jsonObject.studentId;
                 await delay(1000);
                 document.getElementById("preloader").style.display = "none";
 
             } catch (e) {
                 // On Error
-                console.log("ERROR: fetchOneSubject/querySelector - " + e);
+                console.log("ERROR: fetchOneStudent/querySelector - " + e);
             }
 
         });
@@ -273,12 +257,12 @@
     async function fOpenNew() {
 
         // Set the action
-        document.getElementById("action").value = "saveNewSubject";
+        document.getElementById("action").value = "saveNewStudent";
 
         //Clean and enabling the controls
-        document.querySelector("#subjectId").disabled  = false;
-        document.querySelector("#subjectName").disabled  = false;
-        document.getElementById("teacherId").disabled = false;
+        document.querySelector("#studentId").disabled  = false;
+        document.querySelector("#studentName").disabled  = false;
+        document.getElementById("classId").disabled = false;
 
         M.FormSelect.init(document.querySelectorAll('.select'), {classes: ""});
         M.updateTextFields();
@@ -289,12 +273,12 @@
 
     }
 
-    //ACTION: updateOneSubject or saveNewSubject
-    function saveOneSubject(oFormEntries) {
-        console.log(" -----> saveOneSubject:" + "");
+    //ACTION: updateOneStudent or saveNewStudent
+    function saveOneStudent(oFormEntries) {
+        console.log(" -----> saveOneStudent:" + "");
         console.log(" -----> action: " + document.getElementById('action').value);
         try {
-            fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+            fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -303,21 +287,21 @@
                 body: JSON.stringify(oFormEntries)
             })
                 .then(res => res.text()).then((jsonReturnString) => {
-                console.log(" -------> subjectjsp fetch: " + jsonReturnString);
+                console.log(" -------> studentjsp fetch: " + jsonReturnString);
                 try {
 
                     //Answer received from the servlet
                     const jsonObject = JSON.parse(jsonReturnString);
                     M.toast({
                         html:
-                            jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Subject NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
+                            jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Student NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
                                 " - " +
                                 jsonObject.message + "</td></tr></table>"
                         , completeCallback: function(){location.reload()}
                     })
                 } catch (e) {
                     // On Error
-                    console.log("ERROR: fetchSubjects/querySelector" + e);
+                    console.log("ERROR: fetchStudents/querySelector" + e);
                 }
 
             });
@@ -326,12 +310,12 @@
         }
     }
 
-    //ACTION: updateOneSubject or saveNewSubject
-    function deleteOneSubject(oFormEntries) {
-        console.log(" -----> deleteOneSubject:" + "");
+    //ACTION: updateOneStudent or saveNewStudent
+    function deleteOneStudent(oFormEntries) {
+        console.log(" -----> deleteOneStudent:" + "");
         console.log(" -----> action: " + document.getElementById('action').value);
         try {
-            fetch("http://localhost:8080/sl_project2_learners_academy/subject-controller", {
+            fetch("http://localhost:8080/sl_project2_learners_academy/student-controller", {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -340,21 +324,21 @@
                 body: JSON.stringify(oFormEntries)
             })
                 .then(res => res.text()).then((jsonReturnString) => {
-                console.log(" -------> subjectjsp fetch: " + jsonReturnString);
+                console.log(" -------> studentjsp fetch: " + jsonReturnString);
                 try {
 
                     //Answer received from the servlet
                     const jsonObject = JSON.parse(jsonReturnString);
                     M.toast({
                         html:
-                            jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Subject NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
+                            jsonObject.code === 0 ? jsonObject.message : "<table><tr><td class=\"center-align\">Student NOT UPDATED</td></tr><tr><td>CODE: " + jsonObject.code +
                                 " - " +
                                 jsonObject.message + "</td></tr></table>"
                         , completeCallback: function(){location.reload()}
                     })
                 } catch (e) {
                     // On Error
-                    console.log("ERROR: fetchSubjects/querySelector" + e);
+                    console.log("ERROR: fetchStudents/querySelector" + e);
                 }
 
             });

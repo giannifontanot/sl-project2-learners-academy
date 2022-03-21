@@ -39,11 +39,12 @@
     <tr>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
             <a
-                    href='./-controller'><h5><i class="material-icons" style="cxolor:#FFC107">poll</i> Student Report</h5></a>
+                    href='./class-report-controller'><h5><i class="material-icons" style="cxolor:#FFC107">poll</i> Class
+                Report</h5></a>
         </div></td>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./class-subject-controller'><h5><i class="material-icons" style="cxolor:#AFB42B">storage</i> Class
-                Report</h5></a>
+            <a href='./class-subject-controller'><h5><i class="material-icons" style="cxolor:#AFB42B">storage</i>
+            Subjects Per Class</h5></a>
         </div></td>
     </tr>
     <tr>
@@ -52,9 +53,8 @@
                 Assign Subjects to One Class</h5></a>
         </div></td>
         <td class="dashboard-cell"><div class="card-panel secondary-text-color hoverable">
-            <a href='./-controller'><h5><i class="material-icons" style="cxolor:#E91E63">system_update_alt</i> Assign
-                Teachers to
-                Subject</h5></a>
+            <a href='./teacher-per-subject-controller'><h5><i class="material-icons" style="cxolor:#E91E63">system_update_alt</i> Assign
+                Teachers to Subject</h5></a>
         </div></td>
     </tr>
 </table>

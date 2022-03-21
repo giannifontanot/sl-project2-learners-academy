@@ -16,7 +16,7 @@
 <%@include file="includes/topNav.jsp" %>
 
 <div class="container">
-    <h3 class='header'>Classes Report</h3>
+    <h3 class='header'>Subjects Per Class</h3>
     <%
         List<ClassSubject> classSubjectsList = (List<ClassSubject>) request.getAttribute("classSubjectsList");
         // Paint the rows of the subject table
