@@ -1,9 +1,11 @@
 
 package DAOImpl;
 
+import DAO.ClassReportDao;
 import DAO.StudentDao;
 import db.DatabaseConnection;
 import model.Clase;
+import model.ClassFull;
 import model.SQLState;
 import model.Student;
 import org.json.JSONObject;
@@ -12,8 +14,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassReportDaoImpl implements StudentDao {
-    List<Student> students = new ArrayList();
+public class ClassReportDaoImpl implements ClassReportDao {
+    List<ClassFull> students = new ArrayList();
     List<Clase> classes = new ArrayList();
     Student student = null;
     Connection conn;
@@ -23,19 +25,33 @@ public class ClassReportDaoImpl implements StudentDao {
         this.conn = databaseConnection.getConnection();
     }
 
-    public List<Student> getAllStudents() throws SQLException {
+    public List<ClassFull> getAllStudents() throws SQLException {
+
+        String sql = "select classes.class_id, classes.class_name, subjects.subject_id,\n" +
+                "subjects.subject_name, teachers.teacher_id,\n" +
+                "teachers.teacher_name, students.student_id, students.student_name\n" +
+                "from class_subject, subjects, classes, students, teachers\n" +
+                "where class_subject.class_id = classes.class_id and\n" +
+                "class_subject.subject_id = subjects.subject_id and\n" +
+                "classes.class_id = students.class_id and\n" +
+                "teachers.teacher_id=subjects.teacher_id\n" +
+                "order by classes.class_id, subjects.subject_name";
+
         Statement st = this.conn.createStatement();
-        ResultSet rs = st.executeQuery("select students.student_id, students.student_name, classes.class_name\n" +
-                "from classes, students\n" +
-                "where classes.class_id=students.class_id");
+        ResultSet rs = st.executeQuery(sql);
 
         while (rs.next()) {
+            String classId = rs.getString("class_id");
+            String className = rs.getString("class_name");
+            String subjectId = rs.getString("subject_id");
+            String subjectName = rs.getString("subject_name");
+            int teacherId = rs.getInt("teacher_id");
+            String teacherName = rs.getString("teacher_name");
             int studentId = rs.getInt("student_id");
-            String classId = rs.getString("class_name");
             String studentName = rs.getString("student_name");
-            Student student = new Student(studentId, classId, studentName);
+
+            ClassFull student = new ClassFull(classId, className, studentId, studentName, teacherId, teacherName, subjectId, subjectName);
             this.students.add(student);
-            System.out.format(" ----> %s, %s, %s\n", studentId, classId, studentName);
         }
 
         st.close();

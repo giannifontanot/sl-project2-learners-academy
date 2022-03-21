@@ -1,9 +1,12 @@
 package controller;
 
+import DAO.ClassReportDao;
 import DAO.StudentDao;
+import DAOImpl.ClassReportDaoImpl;
 import DAOImpl.StudentDaoImpl;
 import com.google.gson.Gson;
 import model.Clase;
+import model.ClassFull;
 import model.SQLState;
 import model.Student;
 import org.json.JSONObject;
@@ -19,7 +22,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet("/student-controller")
+@WebServlet("/class-report-controller")
 public class ClassReportController extends HttpServlet {
     private String message;
 
@@ -28,14 +31,14 @@ public class ClassReportController extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        StudentDao studentDao = null;
+        ClassReportDao studentDao = null;
         try {
-            studentDao = new StudentDaoImpl();
+            studentDao = new ClassReportDaoImpl();
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
 
-        List<Student> studentsList = null;
+        List<ClassFull> studentsList = null;
 
         try {
             studentsList = studentDao.getAllStudents();
@@ -53,7 +56,7 @@ public class ClassReportController extends HttpServlet {
 
         request.setAttribute("classesList", classesList);
         request.setAttribute("studentsList", studentsList);
-        request.getRequestDispatcher("students.jsp").forward(request, response);
+        request.getRequestDispatcher("classReport.jsp").forward(request, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

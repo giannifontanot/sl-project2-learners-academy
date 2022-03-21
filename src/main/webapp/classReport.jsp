@@ -3,6 +3,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Student" %>
 <%@ page import="model.Clase" %>
+<%@ page import="model.ClassFull" %>
 
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
@@ -15,116 +16,46 @@
 
 <br /><br />
 <div class="container">
-    <h3>Students</h3>
+    <h3>Class Report</h3>
     <br />
-    <table class="striped card-panel highlight" id="myTable">
+    <table class="striped card-panel highlight">
         <thead>
         <tr>
-            <th class="center-align">Edit</th>
-            <th class="center-align">ID</th>
+            <th class="center-align">Class Id</th>
+            <th class="center-align">Class Name</th>
+            <th class="center-align">Student Id</th>
             <th class="center-align">Student Name</th>
-            <th class="center-align">Class</th>
-            <th class="center-align">Delete</th>
+<%--            <th class="center-align">Teacher Id</th>--%>
+            <th class="center-align">Teacher Name</th>
+            <th class="center-align">Subject</th>
+            <th class="center-align">Subject CODE</th>
+
         </tr>
         </thead>
         <tbody>
         <%
-            List<Student> studentsList = (List<Student>) request.getAttribute("studentsList");
+            List<ClassFull> studentsList = (List<ClassFull>) request.getAttribute("studentsList");
 
             // Paint the rows of the student table
-            for (Student student : studentsList) {
-                out.println("");
-                out.println("<tr><td class=\"center-align\">");
-                out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + student.getStudentId() +
-                        "\")'>" +
-                        "<i class=\"material-icons\">edit</i></a>");
-                out.println("</td><td class=\"center-align\">");
-                out.println(student.getStudentId());
-                out.println("</td><td>");
-                out.println(student.getStudentName());
-                out.println("</td><td class=\"center-align\">");
-                out.println(student.getClassId());
-                out.println("</td><td class=\"center-align\">");
-                out.println("<a href='javascript:fOpenDelete(\"" + student.getStudentId() +
-                        "\")'><i class=\"material-icons\">delete</i></a>");
-                out.println("</td></tr>");
+            for (ClassFull student : studentsList) {
+                out.println("<tr>");
+                out.println("<td class=\"center-align\">"+student.getClassId()+"</td>");
+                out.println("<td class=\"center-align\">"+student.getClassName()+"</td>");
+                out.println("<td class=\"center-align\">"+student.getStudentId()+"</td>");
+                out.println("<td class=\"center-align\">"+student.getStudentName()+"</td>");
+//                out.println("<td class=\"center-align\">"+student.getTeacherId()+"</td>");
+                out.println("<td class=\"center-align\">"+student.getTeacherName()+"</td>");
+                out.println("<td class=\"center-align\">"+student.getSubjectName()+"</td>");
+                out.println("<td class=\"center-align\">"+student.getSubjectId()+"</td>");
+
+                out.println("</tr>");
             }
         %>
         </tbody>
     </table>
-    <div class="col-md-12 center text-center">
-        <span class="left" id="total_reg"></span>
-        <ul class="pagination pager" id="myPager"></ul>
-    </div>
 
-    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();">
-        <i class="material-icons">add</i></a>
 </div>
 
-<a id='modalLink' class="waves-effect waves-light btn hide modal-trigger" href="#modal1">Modal</a>
-<!-- Modal Structure -->
-<div id="modal1" class="modal">
-    <form id="form1" class="col s12">
-    <div class="preloader-background" id="preloader">
-        <div class="preloader-wrapper big active">
-            <div class="spinner-layer spinner-blue-only">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="gap-patch">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-content">
-        <h4>Student Detail</h4>
-        <div id="contenido">
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input type="text" id="studentId" name="studentId" value="">
-                        <label for="studentId" class="active">Student</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <select id="classId" name="classId" class="select">
-                            <option value="" disabled selected>Select the student's class</option>
-
-    <%
-        List<Clase> classesList = (List<Clase>) request.getAttribute("classesList");
-
-        // Paint the rows of the student table
-        for (Clase clase : classesList) {
-            out.println("<option value=\"" + clase.getClassId() + "\">");
-            out.println(clase.getClassName());
-            out.println("</option>");
-        }
-    %>
-                        </select>
-                        <label for="clasId" class="active">Student's class</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input type="text" id="studentName" name="studentName" value="">
-                        <label for="studentName" class="active">Student Name</label>
-                </div>
-            </div>
-                <input type="hidden" id="action" name="action" value="">
-                <input type="hidden" id="deleteStudentId" name="deleteStudentId" value="">
-
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-close waves-effect waves-light btn accent-color" type="submit"><i class="material-icons left">save
-        </i>Save Changes</button>
-    </div>
-    </form>
-</div>
 
 <script>
     async function handleSubmit(event) {
