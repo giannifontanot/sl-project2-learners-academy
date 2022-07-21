@@ -2,7 +2,7 @@
 ![Status Stable](https://img.shields.io/badge/Status-Stable-blue)
 [![MIT License](https://img.shields.io/badge/License-MIT%20License-brightgreen)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 # Learner's Academy
-The Learner’s Academy web application was built with the purpose of having a better administration of the school's resources (Teachers, Classrooms, Subjects, and Students). You will find the following options in the main menu:
+The Learner’s Academy web application was built with the purpose of having a better administration of the school's resources (Teachers, Classrooms, Subjects, and Students). By using the application, you will be able to manage the resources using a web interface.
 ## Table of Contents
 - Learner's Academy
 	* [Installation](#installation)
@@ -15,14 +15,16 @@ The Learner’s Academy web application was built with the purpose of having a b
 	+ [Authors](#authors)
 ## Installation
 Since the application is written using JSP's, a JVM is a must. Please install Java version 11 as a minimum. 
-<p> Java 11</p>
-<p> Tomcat v.9</p>
-<p> MySQL Server</p>
+````````````````````````
+- Java 11
+- Tomcat v.9
+- MySQL Server
+````````````````````````
 ## Usage
+````````````````````````
 Once the application is running on a computer, you access the Academy using a web browser.
-<p align="center"><img src="runApp.JPG" /></p>
-<p align="center"><img src="ProjectStructure.JPG" /></p>
-
+````````````````````````
+<p align="center"><img src="pic1.JPG" width=50% /></p>
 ## Current Features
 ````````````````````````
 - Set up a master list of all the subjects for all the classes
@@ -34,7 +36,6 @@ Once the application is running on a computer, you access the Academy using a we
 - Get a Class Report (List of students, subjects, and teachers)
 
 ````````````````````````
-<p align="center"><img src="pic1.JPG" width=50% /></p>
 <p align="center"><img src="pic2.JPG" width=50% /></p>
 <p align="center"><img src="pic3.JPG" width=50% /></p>
 <p align="center"><img src="pic4.JPG" width=50% /></p>
@@ -49,9 +50,8 @@ Once the application is running on a computer, you access the Academy using a we
 ````````````````````````
 
 ## Database Diagram
-````````````````````````
 <p align="center"><img src="pic7.JPG"/></p>
-````````````````````````
+
 ## Contributions
 If you would like to contribute to this project , you are very welcome! You can fork it and later submit a pull request. 
 In case you need them, here are some guidelines: [Contributor Covenant](https://www.contributor-covenant.org/)
