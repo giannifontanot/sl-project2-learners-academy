@@ -34,7 +34,6 @@ Once the application is running on a computer, you access the Academy using a we
 - Asign teachers to a class for a subject (A teacher can be assigned to different classes for different subjects)
 - Get a master list of students (Each student must be assigned to a single class)
 - Get a Class Report (List of students, subjects, and teachers)
-
 ````````````````````````
 <p align="center"><img src="./images/pic2.JPG" width=50% /></p>
 <p align="center"><img src="./images/pic3.JPG" width=50% /></p>
